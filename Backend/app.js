@@ -24,9 +24,9 @@ app.get("/", (req, res) => {
   res.send("Hello World");
 });
 
-app.use("/users", userRoutes);
-app.use('/captain', captainRoutes)
-app.use("/maps", mapRoutes)
-app.use('/rides', rideRoutes)
+app.use("/api/users", userRoutes);
+app.use('/api/captain', captainRoutes)
+app.use("/api/maps", mapRoutes)
+app.use('/api/rides', rideRoutes)
 
 module.exports = app;
