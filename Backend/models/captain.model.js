@@ -73,7 +73,7 @@ captainSchema.methods.generateAuthToken = function () {
   return token;
 };
 
-captainSchema.static.hashPassword = async function (password) {
+captainSchema.statics.hashPassword = async function (password) {
   return await bcrypt.hash(password, 10);
 };
 

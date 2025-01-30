@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import {setFormField, resetForm} from '../store/captainAuthSlice'
+import { setFormField, resetForm } from "../store/captainAuthSlice";
 
-import axios from 'axios'
+import axios from "axios";
 import Input from "../component/Input";
 
 const CaptainSignup = () => {
@@ -22,25 +22,26 @@ const CaptainSignup = () => {
   } = useSelector((state) => state.captainAuth);
 
   const handleInputChange = (field, value) => {
-    dispatch(setFormField({ field, value }));
+    const updatedValue = field === "vehicleCapacity" ? Number(value) : value;
+    dispatch(setFormField({ field, value: updatedValue }));
   };
 
   const submitHandler = async (e) => {
     e.preventDefault();
 
     const captainData = {
-      fullname: { firstName: firstName, lastName: lastName },
+      fullname: { firstname: firstName, lastname: lastName },
       email,
       password,
       vehicle: {
         color: vehicleColor,
         plate: vehiclePlate,
-        capacity: vehicleCapacity,
+        capacity: Number(vehicleCapacity),
         vehicleType,
       },
     };
 
-    const response = await axios.post("/api/signup", captainData);
+    const response = await axios.post("/api/captain/register", captainData);
     if (response.status === 201) {
       const data = response.data;
       localStorage.setItem("token", data.token);
@@ -140,7 +141,7 @@ const CaptainSignup = () => {
               options={[
                 { value: "car", label: "Car" },
                 { value: "auto", label: "Auto" },
-                { value: "moto", label: "Moto" },
+                { value: "motorcycle", label: "Moto" },
               ]}
             />
           </div>
