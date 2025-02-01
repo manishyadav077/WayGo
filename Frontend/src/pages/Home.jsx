@@ -19,12 +19,12 @@ import {
   setDestinationSuggestions,
   setActiveField,
 } from "../store/rideSlice";
-import LocationSearchPanel from "../components/LocationSearchPanel";
-import VehiclePanel from "../components/VehiclePanel";
-import ConfirmRide from "../components/ConfirmRide";
-import LookingForDriver from "../components/LookingForDriver";
-import WaitingForDriver from "../components/WaitingForDriver";
-import LiveTracking from "../components/LiveTracking";
+import LocationSearchPanel from "../component/LocationSearchPanel";
+import VehiclePanel from "../component/VehiclePanel";
+import ConfirmRide from "../component/ConfirmRide";
+import LookingForDriver from "../component/LookingForDriver";
+import WaitingForDriver from "../component/WaitingForDriver";
+// import LiveTracking from "../components/LiveTracking";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -53,7 +53,7 @@ const Home = () => {
     destinationSuggestions,
     activeField,
   } = useSelector((state) => state.ride);
-  const { user } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.authUser);
   const { socket } = useSelector((state) => state.socket);
 
   // Join user to socket room

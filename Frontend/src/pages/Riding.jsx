@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom"; // Added useLocation
 
 
 import { useNavigate } from "react-router-dom";
-import LiveTracking from "./components/LiveTracking";
+// import LiveTracking from "./components/LiveTracking";
 
 const Riding = () => {
   const location = useLocation();
@@ -24,7 +24,7 @@ const Riding = () => {
         <i className="text-lg font-medium ri-home-5-line"></i>
       </Link>
       <div className="h-1/2">
-        <LiveTracking />
+        {/* <LiveTracking /> */}
       </div>
       <div className="h-1/2 p-4">
         <div className="flex items-center justify-between">

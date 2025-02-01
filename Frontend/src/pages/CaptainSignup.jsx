@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { setFormField, resetForm } from "../store/captainAuthSlice";
-
+import { setFormField, setCaptain, resetForm } from "../store/captainAuthSlice";
 import axios from "axios";
 import Input from "../component/Input";
 
@@ -41,12 +40,35 @@ const CaptainSignup = () => {
       },
     };
 
-    const response = await axios.post("/api/captain/register", captainData);
-    if (response.status === 201) {
-      const data = response.data;
-      localStorage.setItem("token", data.token);
+    try {
+      const response = await axios.post("/api/captain/register", captainData);
+
+      if (response.status === 201) {
+        const data = response.data;
+        // Extract captain data from the response
+        const { _id, email, fullname, token } = data.captain;
+
+        // Dispatch setCaptain to store captain data in Redux
+        dispatch(
+          setCaptain({
+            email: email,
+            firstName: fullname.firstname,
+            lastName: fullname.lastname,
+            _id: _id, // Store the _id
+            token: token, // Store the token
+          })
+        );
+
+        // Optional: Store token in localStorage for persistence
+        localStorage.setItem("token", token);
+
+        // Navigate to the captain home page
+        navigate("/captain-home");
+      }
+    } catch (error) {
+      console.error("Signup failed:", error);
+    } finally {
       dispatch(resetForm());
-      navigate("/captain-home");
     }
   };
 

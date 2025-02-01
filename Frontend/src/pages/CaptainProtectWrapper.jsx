@@ -1,36 +1,45 @@
-import React, { useContext, useEffect, useState } from "react";
-import { CaptainDataContext } from "../context/CapatainContext";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { setCaptain } from "../store/captainAuthSlice";
 
 const CaptainProtectWrapper = ({ children }) => {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
-  const { captain, setCaptain } = useContext(CaptainDataContext);
+  const dispatch = useDispatch();
+  const { captain, isLoggedIn } = useSelector((state) => state.captainAuth);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!token) {
       navigate("/captain-login");
+      return;
     }
 
-    axios
-      .get(`${import.meta.env.VITE_BASE_URL}/captains/profile`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
+    // Fetch captain profile
+    const fetchCaptainProfile = async () => {
+      try {
+        const response = await axios.get('/api/captains/profile', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
         if (response.status === 200) {
-          setCaptain(response.data.captain);
+          // Update captain data in Redux
+          dispatch(setCaptain(response.data.captain));
           setIsLoading(false);
         }
-      })
-      .catch((err) => {
+      } catch (err) {
+        // Handle errors (e.g., invalid or expired token)
         localStorage.removeItem("token");
         navigate("/captain-login");
-      });
-  }, [token]);
+      }
+    };
+
+    fetchCaptainProfile();
+  }, [token, navigate, dispatch]);
 
   if (isLoading) {
     return <div>Loading...</div>;
