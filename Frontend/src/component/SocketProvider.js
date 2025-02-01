@@ -1,13 +1,12 @@
+// SocketProvider.js
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { setSocket, setConnected } from "../store/socketSlice";
+import { setConnected } from "../store/socketSlice";
 
 const SocketProvider = ({ children }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(setSocket()); // Initialize socket in Redux store
-
     const socket = io(`${import.meta.env.VITE_BASE_URL}`);
 
     socket.on("connect", () => {
@@ -25,7 +24,7 @@ const SocketProvider = ({ children }) => {
     };
   }, [dispatch]);
 
-  return children; // No need for context, Redux manages state
+  return children;
 };
 
 export default SocketProvider;

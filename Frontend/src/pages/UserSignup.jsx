@@ -1,8 +1,7 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { setFormField, resetForm } from "../store/userAuthSlice";
-
+import { setFormField, setUser, resetForm } from "../store/userAuthSlice";
 import axios from "axios";
 import Input from "../component/Input";
 
@@ -30,16 +29,31 @@ const UserSignup = () => {
       password: password,
     };
 
-    const response = await axios.post("/api/users/register", newUser);
+    try {
+      const response = await axios.post("/api/users/register", newUser);
 
-    if (response.status === 201) {
-      const data = response.data;
-      dispatch(setFormField({ value: data.user }));
-      localStorage.setItem("token", data.token);
-      navigate("/home");
+      if (response.status === 201) {
+        const data = response.data;
+        // Dispatch setUser to store user data in Redux
+        dispatch(
+          setUser({
+            email: data.user.email,
+            firstName: data.user.fullname.firstname,
+            lastName: data.user.fullname.lastname,
+            _id: data.user._id,
+            token: data.token,
+          })
+        );
+        localStorage.setItem("token", data.token); // Optional: Store token in localStorage
+        navigate("/home");
+      }
+    } catch (error) {
+      console.error("Signup failed:", error);
+    } finally {
+      dispatch(resetForm());
     }
-    dispatch(resetForm());
   };
+
   return (
     <div>
       <form onSubmit={submitHandler}>
@@ -66,7 +80,6 @@ const UserSignup = () => {
             onChange={(e) => handleInputChange("email", e.target.value)}
             required
           />
-
           <Input
             label="Password"
             placeholder="password"
@@ -75,6 +88,7 @@ const UserSignup = () => {
             required
           />
         </div>
+        <button type="submit">Sign Up</button>
       </form>
     </div>
   );

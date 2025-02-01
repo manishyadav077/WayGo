@@ -5,6 +5,9 @@ const initialState = {
   password: "",
   firstName: "",
   lastName: "",
+  _id: null, // Add user ID
+  token: null, // Add token for authentication
+  isLoggedIn: false, // Add login status
 };
 
 const userAuthSlice = createSlice({
@@ -15,9 +18,20 @@ const userAuthSlice = createSlice({
       const { field, value } = action.payload;
       state[field] = value;
     },
+    setUser: (state, action) => {
+      const { email, firstName, lastName, _id, token } = action.payload;
+      state.email = email;
+      state.firstName = firstName;
+      state.lastName = lastName;
+      state._id = _id;
+      state.token = token;
+      state.isLoggedIn = true;
+    },
     resetForm: () => initialState,
+    logout: () => initialState, // Clear all user data on logout
   },
 });
 
-export const { setFormField, resetForm } = userAuthSlice.actions;
+export const { setFormField, setUser, resetForm, logout } =
+  userAuthSlice.actions;
 export default userAuthSlice.reducer;
