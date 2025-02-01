@@ -1,12 +1,12 @@
-import React, { useContext, useEffect, useState } from "react";
-import { UserDataContext } from "../context/UserContext";
+import React, {useEffect, useState } from "react";
+
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const UserProtectWrapper = ({ children }) => {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
-  const { user, setUser } = useContext(UserDataContext);
+  const[user, setUser] = useState([])
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
