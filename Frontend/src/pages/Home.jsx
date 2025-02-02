@@ -24,7 +24,7 @@ import VehiclePanel from "../component/VehiclePanel";
 import ConfirmRide from "../component/ConfirmRide";
 import LookingForDriver from "../component/LookingForDriver";
 import WaitingForDriver from "../component/WaitingForDriver";
-// import LiveTracking from "../components/LiveTracking";
+import LiveTracking from "../component/LiveTracking";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -53,7 +53,8 @@ const Home = () => {
     destinationSuggestions,
     activeField,
   } = useSelector((state) => state.ride);
-  const { user } = useSelector((state) => state.authUser);
+  const user  = useSelector((state) => state.userAuth);
+  console.log(user)
   const { socket } = useSelector((state) => state.socket);
 
   // Join user to socket room

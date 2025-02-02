@@ -19,7 +19,9 @@ const userAuthSlice = createSlice({
       state[field] = value;
     },
     setUser: (state, action) => {
+      console.log("Payload Received in Reducer:", action.payload);
       const { email, firstName, lastName, _id, token } = action.payload;
+      console.log("Payload Received in Reducer:", action.payload);
       state.email = email;
       state.firstName = firstName;
       state.lastName = lastName;

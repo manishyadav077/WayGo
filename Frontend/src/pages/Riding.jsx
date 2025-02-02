@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom"; // Added useLocation
 import { useNavigate } from "react-router-dom";
-import LiveTracking from "../components/LiveTracking";
+import LiveTracking from "../component/LiveTracking";
 
 const Riding = () => {
   const location = useLocation();

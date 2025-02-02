@@ -34,7 +34,7 @@ const UserSignup = () => {
 
       if (response.status === 201) {
         const data = response.data;
-        // Dispatch setUser to store user data in Redux
+        console.log("data for user", data);
         dispatch(
           setUser({
             email: data.user.email,
@@ -46,50 +46,56 @@ const UserSignup = () => {
         );
         localStorage.setItem("token", data.token); // Optional: Store token in localStorage
         navigate("/home");
+        // dispatch(resetForm());
       }
     } catch (error) {
       console.error("Signup failed:", error);
-    } finally {
-      dispatch(resetForm());
     }
   };
 
   return (
-    <div>
-      <form onSubmit={submitHandler}>
-        <h3 className="text-lg w-full font-medium mb-2">Create an account</h3>
-        <div className="flex gap-4 mb-7">
-          <Input
-            label="First Name"
-            placeholder="First name"
-            value={firstName}
-            onChange={(e) => handleInputChange("firstName", e.target.value)}
-            required
-          />
-          <Input
-            label="Last Name"
-            placeholder="Last name"
-            value={lastName}
-            onChange={(e) => handleInputChange("lastName", e.target.value)}
-            required
-          />
-          <Input
-            label="Email"
-            placeholder="email"
-            value={email}
-            onChange={(e) => handleInputChange("email", e.target.value)}
-            required
-          />
-          <Input
-            label="Password"
-            placeholder="password"
-            value={password}
-            onChange={(e) => handleInputChange("password", e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit">Sign Up</button>
-      </form>
+    <div className="flex min-h-screen bg-gradient-to-r from-blue-500 to-purple-600">
+      <div className="flex-1 flex items-center justify-center p-8">
+        <form
+          onSubmit={submitHandler}
+          className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md transform transition-all duration-300 hover:scale-105"
+        >
+          <h3 className="text-lg w-full font-medium mb-2">Create an account</h3>
+          <div className="flex flex-col gap-4 mb-7">
+            <Input
+              label="First Name"
+              placeholder="First name"
+              value={firstName}
+              onChange={(e) => handleInputChange("firstName", e.target.value)}
+              required
+            />
+            <Input
+              label="Last Name"
+              placeholder="Last name"
+              value={lastName}
+              onChange={(e) => handleInputChange("lastName", e.target.value)}
+              required
+            />
+            <Input
+              label="Email"
+              placeholder="email"
+              value={email}
+              onChange={(e) => handleInputChange("email", e.target.value)}
+              required
+            />
+            <Input
+              label="Password"
+              placeholder="password"
+              value={password}
+              onChange={(e) => handleInputChange("password", e.target.value)}
+              required
+            />
+          </div>
+          <button type="submit" className="cursor-pointer">
+            Sign Up
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
