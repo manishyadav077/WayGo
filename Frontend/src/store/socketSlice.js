@@ -1,14 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { io } from "socket.io-client";
 
-const socket = io(`${import.meta.env.VITE_BASE_URL}`); // Initialize socket
+const socket = io("http://localhost:3000"); // Initialize socket
 
 const socketSlice = createSlice({
   name: "socket",
   initialState: { socket: null, connected: false },
   reducers: {
-    setSocket: (state) => {
-      state.socket = socket;
+    setSocket: (state, action) => {
+      state.socket = action.payload;
     },
     setConnected: (state, action) => {
       state.connected = action.payload;

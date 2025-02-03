@@ -1,14 +1,19 @@
-// SocketProvider.js
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { setConnected } from "../store/socketSlice";
+import { io } from "socket.io-client";
+import { setSocket, setConnected } from "../store/socketSlice";
 
 const SocketProvider = ({ children }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const socket = io(`${import.meta.env.VITE_BASE_URL}`);
+    // Initialize the socket connection
+    const socket = io("http://localhost:3000"); // Replace with your backend URL
 
+    // Set the socket in the Redux store
+    dispatch(setSocket(socket));
+
+    // Handle connection events
     socket.on("connect", () => {
       console.log("Connected to server");
       dispatch(setConnected(true));
@@ -19,6 +24,7 @@ const SocketProvider = ({ children }) => {
       dispatch(setConnected(false));
     });
 
+    // Cleanup on unmount
     return () => {
       socket.disconnect();
     };
