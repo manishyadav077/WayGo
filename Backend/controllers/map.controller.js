@@ -41,11 +41,20 @@ module.exports.getAutoCompleteSuggestions = async (req, res, next) => {
     }
 
     const { input } = req.query;
+    if (!input) {
+      return res.status(400).json({ message: "Input query is required" });
+    }
 
+    console.log("Fetching autocomplete suggestions for:", input);
+    
     const suggestions = await mapService.getAutoCompleteSuggestions(input);
+    
+    console.log("Suggestions found:", suggestions);
 
     res.status(200).json(suggestions);
   } catch (error) {
-    res.status(500).json({ message: "Internal server error" });
+    console.error("Error in getAutoCompleteSuggestions:", error);
+    res.status(500).json({ message: "Internal server error", error: error.message });
   }
 };
+

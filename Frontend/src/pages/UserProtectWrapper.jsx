@@ -1,21 +1,21 @@
-import React, {useEffect, useState } from "react";
-
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const UserProtectWrapper = ({ children }) => {
-  const token = localStorage.getItem("token");
   const navigate = useNavigate();
-  const[user, setUser] = useState([])
+  const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [token, setToken] = useState(localStorage.getItem("token"));
 
   useEffect(() => {
     if (!token) {
       navigate("/login");
+      return;
     }
 
     axios
-      .get('/api/users/profile', {
+      .get("/api/users/profile", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -27,11 +27,11 @@ const UserProtectWrapper = ({ children }) => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.log("Error fetching user:", err);
         localStorage.removeItem("token");
         navigate("/login");
       });
-  }, [token]);
+  }, [token]); // ✅ `useEffect` will re-run when `token` changes
 
   if (isLoading) {
     return <div>Loading...</div>;

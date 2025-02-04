@@ -1,24 +1,22 @@
-// Home.js
-import React, { useEffect, useRef } from "react";
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import axios from "axios";
+import React, { useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useSocket } from "../hooks/useSocket";
+import { usePanelAnimations } from "../hooks/usePanelAnimations";
+import { useInputHandlers } from "../hooks/useInputHandler";
+import { fetchFare, createRide } from "../services/rideService";
 import {
-  setPickup,
-  setDestination,
+  setVehiclePanel,
+  setPanelOpen,
   setFare,
   setVehicleType,
-  setRide,
-  setVehiclePanel,
   setConfirmRidePanel,
   setVehicleFound,
   setWaitingForDriver,
-  setPickupSuggestions,
-  setDestinationSuggestions,
   setActiveField,
+  setDestination,
+  setPickup,
 } from "../store/rideSlice";
+
 import LocationSearchPanel from "../component/LocationSearchPanel";
 import VehiclePanel from "../component/VehiclePanel";
 import ConfirmRide from "../component/ConfirmRide";
@@ -28,7 +26,21 @@ import LiveTracking from "../component/LiveTracking";
 
 const Home = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const {
+    pickup,
+    destination,
+    fare,
+    vehicleType,
+    vehiclePanel,
+    panelOpen,
+    ride,
+    confirmRidePanel,
+    vehicleFound,
+    waitingForDriver,
+    pickupSuggestions,
+    destinationSuggestions,
+    activeField,
+  } = useSelector((state) => state.ride);
 
   // Refs for GSAP animations
   const vehiclePanelRef = useRef(null);
@@ -38,160 +50,38 @@ const Home = () => {
   const panelRef = useRef(null);
   const panelCloseRef = useRef(null);
 
-  // Redux state
-  const {
-    pickup,
-    destination,
-    fare,
-    vehicleType,
-    ride,
-    vehiclePanel,
-    confirmRidePanel,
-    vehicleFound,
-    waitingForDriver,
-    pickupSuggestions,
-    destinationSuggestions,
-    activeField,
-  } = useSelector((state) => state.ride);
-  const user = useSelector((state) => state.userAuth);
-  // console.log(user)
-  const { socket } = useSelector((state) => state.socket);
-  console.log("socket", socket);
-
-  // Join user to socket room
-  useEffect(() => {
-    socket?.emit("join", { userType: "user", userId: user._id });
-  }, [user, socket]);
-
-  // Socket event listeners
-  useEffect(() => {
-    socket.on("ride-confirmed", (ride) => {
-      dispatch(setVehicleFound(false));
-      dispatch(setWaitingForDriver(true));
-      dispatch(setRide(ride));
-    });
-
-    socket.on("ride-started", (ride) => {
-      dispatch(setWaitingForDriver(false));
-      navigate("/riding", { state: { ride } });
-    });
-
-    return () => {
-      socket.off("ride-confirmed");
-      socket.off("ride-started");
-    };
-  }, [socket, dispatch, navigate]);
-
-  // GSAP animations for panels
-  useGSAP(() => {
-    if (vehiclePanel) {
-      gsap.to(vehiclePanelRef.current, {
-        transform: "translateY(0)",
-      });
-    } else {
-      gsap.to(vehiclePanelRef.current, {
-        transform: "translateY(100%)",
-      });
-    }
-  }, [vehiclePanel]);
-
-  useGSAP(() => {
-    if (confirmRidePanel) {
-      gsap.to(confirmRidePanelRef.current, {
-        transform: "translateY(0)",
-      });
-    } else {
-      gsap.to(confirmRidePanelRef.current, {
-        transform: "translateY(100%)",
-      });
-    }
-  }, [confirmRidePanel]);
-
-  useGSAP(() => {
-    if (vehicleFound) {
-      gsap.to(vehicleFoundRef.current, {
-        transform: "translateY(0)",
-      });
-    } else {
-      gsap.to(vehicleFoundRef.current, {
-        transform: "translateY(100%)",
-      });
-    }
-  }, [vehicleFound]);
-
-  useGSAP(() => {
-    if (waitingForDriver) {
-      gsap.to(waitingForDriverRef.current, {
-        transform: "translateY(0)",
-      });
-    } else {
-      gsap.to(waitingForDriverRef.current, {
-        transform: "translateY(100%)",
-      });
-    }
-  }, [waitingForDriver]);
-
-  // Handle pickup and destination input changes
-  const handlePickupChange = async (e) => {
-    const value = e.target.value;
-    dispatch(setPickup(value));
-    try {
-      const response = await axios.get("/api/maps/get-suggestions", {
-        params: { input: value },
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      dispatch(setPickupSuggestions(response.data));
-    } catch (error) {
-      console.error("Error fetching pickup suggestions:", error);
-    }
-  };
-
-  const handleDestinationChange = async (e) => {
-    const value = e.target.value;
-    dispatch(setDestination(value));
-    try {
-      const response = await axios.get("/api/maps/get-suggestions", {
-        params: { input: value },
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      dispatch(setDestinationSuggestions(response.data));
-    } catch (error) {
-      console.error("Error fetching destination suggestions:", error);
-    }
-  };
+  // Custom hooks
+  useSocket();
+  usePanelAnimations(vehiclePanelRef, vehiclePanel);
+  usePanelAnimations(confirmRidePanelRef, confirmRidePanel);
+  usePanelAnimations(vehicleFoundRef, vehicleFound);
+  usePanelAnimations(waitingForDriverRef, waitingForDriver);
+  const { handlePickupChange, handleDestinationChange } = useInputHandlers();
 
   // Find trip and calculate fare
   const findTrip = async () => {
     dispatch(setVehiclePanel(true));
     dispatch(setPanelOpen(false));
     try {
-      const response = await axios.get("/api/rides/get-fare", {
-        params: { pickup, destination },
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      dispatch(setFare(response.data));
+      const fare = await fetchFare(
+        pickup,
+        destination,
+        localStorage.getItem("token")
+      );
+      dispatch(setFare(fare));
     } catch (error) {
       console.error("Error fetching fare:", error);
     }
   };
 
   // Create a ride
-  const createRide = async () => {
+  const handleCreateRide = async () => {
     try {
-      await axios.post(
-        "/api/rides/create",
-        { pickup, destination, vehicleType },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
+      await createRide(
+        pickup,
+        destination,
+        vehicleType,
+        localStorage.getItem("token")
       );
     } catch (error) {
       console.error("Error creating ride:", error);
@@ -281,7 +171,7 @@ const Home = () => {
         className="fixed w-full z-40 bottom-0 translate-y-full bg-white px-3 py-6 pt-12"
       >
         <ConfirmRide
-          createRide={createRide}
+          createRide={handleCreateRide}
           pickup={pickup}
           destination={destination}
           fare={fare}
@@ -295,7 +185,7 @@ const Home = () => {
         className="fixed w-full z-40 bottom-0 translate-y-full bg-white px-3 py-6 pt-12"
       >
         <LookingForDriver
-          createRide={createRide}
+          createRide={handleCreateRide}
           pickup={pickup}
           destination={destination}
           fare={fare}

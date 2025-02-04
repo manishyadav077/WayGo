@@ -44,24 +44,41 @@ module.exports.getDistanceTime = async (origin, destination) => {
   }
 };
 
-module.exports.getAutoCompleteSuggestions = async (input) => {
+module.exports.getAutoCompleteSuggestions = async (
+  input,
+  latitude,
+  longitude
+) => {
   if (!input) {
     throw new Error("Query is required");
   }
 
-  const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+  let url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
     input
-  )}`;
+  )}&countrycodes=np&limit=5`;
+
+  if (latitude && longitude) {
+    const viewbox = `${longitude - 0.1},${latitude + 0.1},${longitude + 0.1},${
+      latitude - 0.1
+    }`;
+    url += `&viewbox=${viewbox}&bounded=1`;
+  }
 
   try {
+    console.log("Calling Nominatim API:", url);
     const response = await axios.get(url);
+    console.log("API Response:", response.data);
+
     if (response.data && response.data.length > 0) {
-      return response.data.map((result) => result.display_name);
-    } else {
-      throw new Error("Unable to fetch suggestions");
+      return response.data.map((result) => ({
+        name: result.display_name,
+        lat: parseFloat(result.lat),
+        lon: parseFloat(result.lon),
+      }));
     }
+    return [];
   } catch (err) {
-    console.error(err);
-    throw err;
+    console.error("Error fetching suggestions:", err.message);
+    return [];
   }
 };

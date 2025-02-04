@@ -9,6 +9,7 @@ const rideSlice = createSlice({
     vehicleType: null,
     ride: null,
     vehiclePanel: false,
+    panelOpen: false,
     confirmRidePanel: false,
     vehicleFound: false,
     waitingForDriver: false,
@@ -19,6 +20,9 @@ const rideSlice = createSlice({
   reducers: {
     setPickup: (state, action) => {
       state.pickup = action.payload;
+    },
+    setPanelOpen: (state, action) => {
+      state.panelOpen = action.payload;
     },
     setDestination: (state, action) => {
       state.destination = action.payload;
@@ -69,6 +73,7 @@ export const {
   setPickupSuggestions,
   setDestinationSuggestions,
   setActiveField,
+  setPanelOpen
 } = rideSlice.actions;
 
 export default rideSlice.reducer;

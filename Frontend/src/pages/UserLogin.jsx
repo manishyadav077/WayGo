@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { setFormField, resetForm } from "../store/userAuthSlice";
+import { setFormField, setUser } from "../store/userAuthSlice";
 import axios from "axios";
 import Input from "../component/Input";
 
@@ -27,11 +27,19 @@ const UserLogin = () => {
 
     if (response.status === 201) {
       const data = response.data;
-      dispatch(setFormField({ value: data.user }));
+      dispatch(
+        setUser({
+          email: data.user.email,
+          firstName: data.user.fullname.firstname,
+          lastName: data.user.fullname.lastname,
+          _id: data.user._id,
+          token: data.token,
+        })
+      );
       localStorage.setItem("token", data.token);
       navigate("/home");
     }
-    dispatch(resetForm());
+    // dispatch(resetForm());
   };
 
   // Word-by-word animation for the title
