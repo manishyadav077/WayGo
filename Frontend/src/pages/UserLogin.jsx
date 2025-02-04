@@ -25,7 +25,7 @@ const UserLogin = () => {
 
     const response = await axios.post("/api/users/login", newUser);
 
-    if (response.status === 201) {
+    if (response.status === 200) {
       const data = response.data;
       dispatch(
         setUser({
