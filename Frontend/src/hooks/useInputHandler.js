@@ -13,14 +13,29 @@ export const useInputHandlers = () => {
   const handlePickupChange = async (e) => {
     const value = e.target.value;
     dispatch(setPickup(value));
+
+    // ✅ Retrieve user location from localStorage
+    const storedLocation = localStorage.getItem("userLocation");
+    let userLocation = storedLocation ? JSON.parse(storedLocation) : null;
+
+    if (!userLocation || !userLocation.lat || !userLocation.lng) {
+      console.warn(
+        "⚠️ User location not available - using default coordinates"
+      );
+      userLocation = { lat: 0, lng: 0 }; // Default to (0,0) or another fallback
+    }
+
     try {
       const suggestions = await fetchSuggestions(
         value,
-        localStorage.getItem("token")
+        localStorage.getItem("token"),
+        userLocation.lat,
+        userLocation.lng
       );
+
       dispatch(setPickupSuggestions(suggestions));
     } catch (error) {
-      console.error("Error fetching pickup suggestions:", error);
+      console.error("❌ Error fetching pickup suggestions:", error);
     }
   };
 

@@ -58,6 +58,21 @@ const Home = () => {
   usePanelAnimations(waitingForDriverRef, waitingForDriver);
   const { handlePickupChange, handleDestinationChange } = useInputHandlers();
 
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const userLocation = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      };
+
+      // ✅ Store in localStorage for future requests
+      localStorage.setItem("userLocation", JSON.stringify(userLocation));
+    },
+    (error) => {
+      console.error("🚨 Location permission denied:", error);
+    }
+  );
+
   // Find trip and calculate fare
   const findTrip = async () => {
     dispatch(setVehiclePanel(true));

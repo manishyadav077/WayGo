@@ -35,26 +35,29 @@ module.exports.getDistanceTime = async (req, res, next) => {
 
 module.exports.getAutoCompleteSuggestions = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+    console.log("Received Request:", req.query);
 
-    const { input } = req.query;
+    const { input, latitude, longitude } = req.query;
+
     if (!input) {
       return res.status(400).json({ message: "Input query is required" });
     }
 
-    console.log("Fetching autocomplete suggestions for:", input);
-    
-    const suggestions = await mapService.getAutoCompleteSuggestions(input);
-    
-    console.log("Suggestions found:", suggestions);
+    if (!latitude || !longitude) {
+      console.warn("⚠️ Missing latitude or longitude - Defaulting to 0,0");
+    }
+
+    const suggestions = await mapService.getAutoCompleteSuggestions(
+      input,
+      latitude || 0,
+      longitude || 0
+    );
 
     res.status(200).json(suggestions);
   } catch (error) {
-    console.error("Error in getAutoCompleteSuggestions:", error);
-    res.status(500).json({ message: "Internal server error", error: error.message });
+    console.error("❌ Error in getAutoCompleteSuggestions:", error);
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
   }
 };
-

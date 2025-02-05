@@ -1,16 +1,25 @@
 import axios from "axios";
 
-export const fetchSuggestions = async (input, token) => {
+export const fetchSuggestions = async (input, token, latitude, longitude) => {
+  console.log("🚀 Sending request with:", {
+    input,
+    latitude,
+    longitude,
+    token,
+  });
+
   try {
     const response = await axios.get("/api/maps/get-suggestions", {
-      params: { input },
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      params: { input, latitude, longitude },
+      headers: { Authorization: `Bearer ${token}` },
     });
+
     return response.data;
   } catch (error) {
-    console.error("Error fetching suggestions:", error);
+    console.error(
+      "❌ Error fetching suggestions:",
+      error.response?.data || error.message
+    );
     throw error;
   }
 };
