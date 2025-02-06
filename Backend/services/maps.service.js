@@ -65,9 +65,9 @@ module.exports.getAutoCompleteSuggestions = async (
   }
 
   try {
-    console.log("Calling Nominatim API:", url);
+    // console.log("Calling Nominatim API:", url);
     const response = await axios.get(url);
-    console.log("API Response:", response.data);
+    // console.log("API Response:", response.data);
 
     if (response.data && response.data.length > 0) {
       return response.data.map((result) => ({

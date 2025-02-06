@@ -104,7 +104,7 @@ module.exports.startRide = async (req, res) => {
       captain: req.captain,
     });
 
-    console.log(ride);
+    // console.log(ride);
 
     sendMessageToSocketId(ride.user.socketId, {
       event: "ride-started",
@@ -139,3 +139,5 @@ module.exports.endRide = async (req, res) => {
   }
   s;
 };
+
+

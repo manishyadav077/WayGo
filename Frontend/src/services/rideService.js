@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const fetchSuggestions = async (input, token, latitude, longitude) => {
-  console.log("🚀 Sending request with:", {
+  console.log("🚀 Sending request for suggestion:", {
     input,
     latitude,
     longitude,
@@ -25,13 +25,20 @@ export const fetchSuggestions = async (input, token, latitude, longitude) => {
 };
 
 export const fetchFare = async (pickup, destination, token) => {
+  console.log("🚀 Sending request for fare:", {
+    pickup,
+    destination,
+    token,
+  });
   try {
     const response = await axios.get("/api/rides/get-fare", {
+    
       params: { pickup, destination },
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
+    console.log("response for fare",response)
     return response.data;
   } catch (error) {
     console.error("Error fetching fare:", error);
@@ -40,6 +47,12 @@ export const fetchFare = async (pickup, destination, token) => {
 };
 
 export const createRide = async (pickup, destination, vehicleType, token) => {
+  console.log("🚀 Sending request for create ride:", {
+    pickup,
+    destination,
+    token,
+    vehicleType
+  });
   try {
     await axios.post(
       "/api/rides/create",

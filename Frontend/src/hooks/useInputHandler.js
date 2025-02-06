@@ -42,10 +42,21 @@ export const useInputHandlers = () => {
   const handleDestinationChange = async (e) => {
     const value = e.target.value;
     dispatch(setDestination(value));
+    const storedLocation = localStorage.getItem("userLocation");
+    let userLocation = storedLocation ? JSON.parse(storedLocation) : null;
+
+    if (!userLocation || !userLocation.lat || !userLocation.lng) {
+      console.warn(
+        "⚠️ User location not available - using default coordinates"
+      );
+      userLocation = { lat: 0, lng: 0 }; // Default to (0,0) or another fallback
+    }
     try {
       const suggestions = await fetchSuggestions(
         value,
-        localStorage.getItem("token")
+        localStorage.getItem("token"),
+        userLocation.lat,
+        userLocation.lng
       );
       dispatch(setDestinationSuggestions(suggestions));
     } catch (error) {

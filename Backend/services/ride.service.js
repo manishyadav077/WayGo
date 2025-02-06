@@ -9,7 +9,14 @@ async function getFare(pickup, destination) {
         throw new Error('Pickup and destination are required');
     }
 
-    const distanceTime = await mapService.getDistanceTime(pickup, destination);
+    const pickupCoordinates = await mapService.getAddressCoordinate(pickup);
+    const destinationCoordinates = await mapService.getAddressCoordinate(destination);
+
+    console.log("pickup cordinate and destination cordinate", pickupCoordinates, destinationCoordinates)
+
+
+    const distanceTime = await mapService.getDistanceTime(pickupCoordinates, destinationCoordinates);
+    console.log("distance time", distanceTime)
 
     const baseFare = {
         auto: 30,

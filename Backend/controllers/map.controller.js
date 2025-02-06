@@ -35,7 +35,7 @@ module.exports.getDistanceTime = async (req, res, next) => {
 
 module.exports.getAutoCompleteSuggestions = async (req, res, next) => {
   try {
-    console.log("Received Request:", req.query);
+    // console.log("Received Request:", req.query);
 
     const { input, latitude, longitude } = req.query;
 
