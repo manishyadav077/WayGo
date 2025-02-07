@@ -23,7 +23,7 @@ async function getFare(pickup, destination) {
     pickupCoordinates,
     destinationCoordinates
   );
-  console.log("distance time", distanceTime);
+  // console.log("distance time", distanceTime);
 
   const baseFare = {
     auto: 30,
@@ -88,7 +88,7 @@ module.exports.createRide = async ({
 
   const fare = await getFare(pickup, destination);
 
-  const ride = rideModel.create({
+  const ride = await rideModel.create({
     user,
     pickup,
     destination,
