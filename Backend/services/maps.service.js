@@ -57,12 +57,12 @@ module.exports.getAutoCompleteSuggestions = async (
     input
   )}&countrycodes=np&limit=5`;
 
-  if (latitude && longitude) {
-    const viewbox = `${longitude - 0.1},${latitude + 0.1},${longitude + 0.1},${
-      latitude - 0.1
-    }`;
-    url += `&viewbox=${viewbox}&bounded=1`;
-  }
+  // if (latitude && longitude) {
+  //   const viewbox = `${longitude - 0.1},${latitude + 0.1},${longitude + 0.1},${
+  //     latitude - 0.1
+  //   }`;
+  //   url += `&viewbox=${viewbox}&bounded=1`;
+  // }
 
   try {
     // console.log("Calling Nominatim API:", url);
@@ -70,11 +70,21 @@ module.exports.getAutoCompleteSuggestions = async (
     // console.log("API Response:", response.data);
 
     if (response.data && response.data.length > 0) {
-      return response.data.map((result) => ({
-        name: result.display_name,
-        lat: parseFloat(result.lat),
-        lon: parseFloat(result.lon),
-      }));
+      // console.log("Response data:", response.data); 
+
+      return response.data.map((result) => {
+        // console.log("Current result:", result); 
+
+        const mappedResult = {
+          name: result.display_name,
+          lat: parseFloat(result.lat),
+          lon: parseFloat(result.lon),
+        };
+
+        console.log("Mapped result:", mappedResult); // Log the mapped result
+
+        return mappedResult;
+      });
     }
     return [];
   } catch (err) {
