@@ -73,19 +73,13 @@ const CaptainSignup = () => {
   };
 
   return (
-    <div className="py-5 px-5 h-screen flex flex-col justify-between">
-      <div>
-        <img
-          className="w-20 mb-3"
-          src="https://www.svgrepo.com/show/505031/uber-driver.svg"
-          alt=""
-        />
+    <div className="min-h-screen flex justify-center items-center bg-gradient-to-r from-blue-500 to-purple-600 p-6">
+      <div className="w-full max-w-2xl bg-white shadow-lg rounded-xl p-6">
+        <h2 className="text-2xl font-bold text-center mb-4">Captain Signup</h2>
 
         <form onSubmit={submitHandler}>
-          <h3 className="text-lg w-full font-medium mb-2">
-            What's our Captain's name
-          </h3>
-          <div className="flex gap-4 mb-7">
+          {/* Personal Information */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input
               label="First Name"
               placeholder="First name"
@@ -100,30 +94,29 @@ const CaptainSignup = () => {
               onChange={(e) => handleInputChange("lastName", e.target.value)}
               required
             />
+            <Input
+              label="Email"
+              type="email"
+              placeholder="email@example.com"
+              value={email}
+              onChange={(e) => handleInputChange("email", e.target.value)}
+              required
+            />
+            <Input
+              label="Password"
+              type="password"
+              placeholder="Enter password"
+              value={password}
+              onChange={(e) => handleInputChange("password", e.target.value)}
+              required
+            />
           </div>
 
-          <Input
-            label="Email"
-            type="email"
-            placeholder="email@example.com"
-            value={email}
-            onChange={(e) => handleInputChange("email", e.target.value)}
-            required
-            className="mb-7"
-          />
-
-          <Input
-            label="Password"
-            type="password"
-            placeholder="Enter password"
-            value={password}
-            onChange={(e) => handleInputChange("password", e.target.value)}
-            required
-            className="mb-7"
-          />
-
-          <h3 className="text-lg font-medium mb-2">Vehicle Information</h3>
-          <div className="flex gap-4 mb-7">
+          {/* Vehicle Information */}
+          <h3 className="text-lg font-semibold mt-6 mb-3">
+            Vehicle Information
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input
               label="Vehicle Color"
               placeholder="Vehicle Color"
@@ -142,8 +135,6 @@ const CaptainSignup = () => {
               }
               required
             />
-          </div>
-          <div className="flex gap-4 mb-7">
             <Input
               label="Vehicle Capacity"
               type="number"
@@ -168,20 +159,22 @@ const CaptainSignup = () => {
             />
           </div>
 
-          <button className="bg-[#111] text-white font-semibold mb-3 rounded-lg px-4 py-2 w-full text-lg">
+          {/* Submit Button */}
+          <button className="mt-6 bg-black text-white font-semibold rounded-lg px-4 py-2 w-full text-lg hover:bg-gray-900 transition">
             Create Captain Account
           </button>
         </form>
 
-        <p className="text-center">
+        {/* Login Link */}
+        <p className="text-center mt-4">
           Already have an account?{" "}
-          <Link to="/captain-login" className="text-blue-600">
+          <Link to="/captain-login" className="text-blue-600 font-medium">
             Login here
           </Link>
         </p>
-      </div>
-      <div>
-        <p className="text-[10px] mt-6 leading-tight">
+
+        {/* Footer */}
+        <p className="text-xs text-center mt-6">
           This site is protected by reCAPTCHA and the{" "}
           <span className="underline">Google Privacy Policy</span> and{" "}
           <span className="underline">Terms of Service apply</span>.

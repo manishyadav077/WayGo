@@ -32,7 +32,6 @@ const Home = () => {
     fare,
     vehicleType,
     vehiclePanel,
-    panelOpen,
     ride,
     confirmRidePanel,
     vehicleFound,
@@ -41,6 +40,9 @@ const Home = () => {
     destinationSuggestions,
     activeField,
   } = useSelector((state) => state.ride);
+
+  const userId = useSelector((state) => state.userAuth);
+  // console.log("user id while creating ride", userId)
 
   // Refs for GSAP animations
   const vehiclePanelRef = useRef(null);
@@ -96,7 +98,8 @@ const Home = () => {
         pickup,
         destination,
         vehicleType,
-        localStorage.getItem("token")
+        localStorage.getItem("token"),
+        userId._id
       );
     } catch (error) {
       console.error("Error creating ride:", error);

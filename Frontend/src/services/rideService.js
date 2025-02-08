@@ -46,7 +46,7 @@ export const fetchFare = async (pickup, destination, token) => {
   }
 };
 
-export const createRide = async (pickup, destination, vehicleType, token) => {
+export const createRide = async (pickup, destination, vehicleType, token, userId) => {
   console.log("🚀 Sending request for create ride:", {
     pickup,
     destination,
@@ -56,7 +56,7 @@ export const createRide = async (pickup, destination, vehicleType, token) => {
   try {
     await axios.post(
       "/api/rides/create",
-      { pickup, destination, vehicleType },
+      { pickup, destination, vehicleType, user:userId},
       {
         headers: {
           Authorization: `Bearer ${token}`,

@@ -10,12 +10,12 @@ module.exports.createRide = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { userId, pickup, destination, vehicleType } = req.body;
+  const { user, pickup, destination, vehicleType } = req.body;
 
   try {
     // ✅ Create ride first
     const ride = await rideService.createRide({
-      user: req.user._id,
+      user,
       pickup,
       destination,
       vehicleType,

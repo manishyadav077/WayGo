@@ -18,28 +18,24 @@ const CaptainProtectWrapper = ({ children }) => {
     }
 
     // Fetch captain profile
-    const fetchCaptainProfile = async () => {
-      try {
-        const response = await axios.get('/api/captains/profile', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
+    axios
+      .get("/api/users/profile", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
         if (response.status === 200) {
-          // Update captain data in Redux
-          dispatch(setCaptain(response.data.captain));
+          setCaptain(response.data);
           setIsLoading(false);
         }
-      } catch (err) {
-        // Handle errors (e.g., invalid or expired token)
+      })
+      .catch((err) => {
+        console.log("Error fetching user:", err);
         localStorage.removeItem("token");
-        navigate("/captain-login");
-      }
-    };
-
-    fetchCaptainProfile();
-  }, [token, navigate, dispatch]);
+        navigate("/captain-home");
+      });
+  }, [token]);
 
   if (isLoading) {
     return <div>Loading...</div>;

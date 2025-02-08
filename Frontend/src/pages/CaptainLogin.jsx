@@ -26,10 +26,10 @@ const CaptainLogin = () => {
     };
 
     const response = await axios.post("/api/captain/login", captainData);
-    if (response.status === 201) {
+    if (response.status === 200) {
       const data = response.data;
       localStorage.setItem("token", data.token);
-      dispatch(resetForm());
+      // dispatch(resetForm());
       navigate("/captain-home");
     }
   };
