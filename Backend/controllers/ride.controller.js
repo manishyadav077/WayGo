@@ -13,7 +13,6 @@ module.exports.createRide = async (req, res) => {
   const { user, pickup, destination, vehicleType } = req.body;
 
   try {
-    // ✅ Create ride first
     const ride = await rideService.createRide({
       user,
       pickup,
@@ -21,48 +20,43 @@ module.exports.createRide = async (req, res) => {
       vehicleType,
     });
 
-    // ✅ Send response immediately
     res.status(201).json(ride);
 
-    // ✅ Fetch pickup coordinates
     let pickupCoordinates;
     try {
       pickupCoordinates = await mapService.getAddressCoordinate(pickup);
+      console.log("pick up cordinates", pickupCoordinates);
       if (!pickupCoordinates) {
-        console.warn("⚠️ No coordinates found for pickup location:", pickup);
+        console.warn("No coordinates found for pickup location:", pickup);
         return;
       }
     } catch (error) {
-      console.error("❌ Error getting pickup coordinates:", error);
+      console.error("Error getting pickup coordinates:", error);
       return;
     }
 
-    // ✅ Find nearby captains
     let captainsInRadius;
     try {
       captainsInRadius = await mapService.getCaptainsInTheRadius(
-        pickupCoordinates.ltd,
+        pickupCoordinates.lat,
         pickupCoordinates.lng,
         2
       );
       if (!captainsInRadius.length) {
-        console.warn("⚠️ No captains found in radius.");
+        console.warn("No captains found in radius.");
         return;
       }
     } catch (error) {
-      console.error("❌ Error getting captains:", error);
+      console.error("Error getting captains:", error);
       return;
     }
 
-    // ✅ Remove OTP for privacy
     ride.otp = "";
 
-    // ✅ Populate ride user details
     const rideWithUser = await rideModel
       .findOne({ _id: ride._id })
       .populate("user");
 
-    // ✅ Send WebSocket messages
     captainsInRadius.forEach((captain) => {
       if (captain.socketId) {
         sendMessageToSocketId(captain.socketId, {
@@ -72,7 +66,7 @@ module.exports.createRide = async (req, res) => {
       }
     });
   } catch (err) {
-    console.error("❌ Error creating ride:", err);
+    console.error("Error creating ride:", err);
     return res.status(500).json({ message: "Failed to create ride" });
   }
 };

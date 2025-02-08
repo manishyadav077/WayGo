@@ -46,9 +46,7 @@ module.exports.getDistanceTime = async (origin, destination) => {
 };
 
 module.exports.getAutoCompleteSuggestions = async (
-  input,
-  latitude,
-  longitude
+  input
 ) => {
   if (!input) {
     throw new Error("Query is required");
@@ -58,23 +56,16 @@ module.exports.getAutoCompleteSuggestions = async (
     input
   )}&countrycodes=np&limit=5`;
 
-  // if (latitude && longitude) {
-  //   const viewbox = `${longitude - 0.1},${latitude + 0.1},${longitude + 0.1},${
-  //     latitude - 0.1
-  //   }`;
-  //   url += `&viewbox=${viewbox}&bounded=1`;
-  // }
 
   try {
-    // console.log("Calling Nominatim API:", url);
+  
     const response = await axios.get(url);
-    // console.log("API Response:", response.data);
+ 
 
     if (response.data && response.data.length > 0) {
-      // console.log("Response data:", response.data);
+     
 
       return response.data.map((result) => {
-        // console.log("Current result:", result);
 
         const mappedResult = {
           name: result.display_name,
@@ -82,7 +73,7 @@ module.exports.getAutoCompleteSuggestions = async (
           lon: parseFloat(result.lon),
         };
 
-        // console.log("Mapped result:", mappedResult);
+    
 
         return mappedResult;
       });
@@ -96,11 +87,11 @@ module.exports.getAutoCompleteSuggestions = async (
 
 module.exports.getCaptainsInTheRadius = async (lat, lng, radius) => {
   try {
-    // Convert radius from km to radians (Earth’s radius ≈ 6371 km)
+   
     const captains = await captainModel.find({
       location: {
         $geoWithin: {
-          $centerSphere: [[lng, lat], radius / 6371], // Ensure correct order
+          $centerSphere: [[lng, lat], radius / 6371],
         },
       },
     });

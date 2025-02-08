@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { setFormField, resetForm } from "../store/captainAuthSlice";
+import { setFormField, resetForm, setCaptain } from "../store/captainAuthSlice";
 
 import axios from "axios";
 import Input from "../component/Input";
@@ -28,6 +28,16 @@ const CaptainLogin = () => {
     const response = await axios.post("/api/captain/login", captainData);
     if (response.status === 200) {
       const data = response.data;
+      console.log("captain data", data)
+      dispatch(
+              setCaptain({
+                email: data.captain.email,
+                firstName: data.captain.fullname.firstname,
+                lastName: data.captain.fullname.lastname,
+                _id: data.captain._id,
+                token: data.token,
+              })
+            );
       localStorage.setItem("token", data.token);
       // dispatch(resetForm());
       navigate("/captain-home");
