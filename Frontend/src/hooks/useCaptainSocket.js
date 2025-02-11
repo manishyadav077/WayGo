@@ -5,19 +5,17 @@ import { setRide } from "../store/rideSlice";
 
 export const useCaptainSocket = () => {
   const dispatch = useDispatch();
-  const  rider  = useSelector((state) => state.captainAuth);
-  // console.log("id in use captain", rider._id)
+  const rider = useSelector((state) => state.captainAuth);
+
   const socket = getSocket();
 
   useEffect(() => {
     if (!rider) return;
 
-
     socket.emit("join", {
       userId: rider?._id,
       userType: "captain",
     });
-
 
     const updateLocation = () => {
       if (navigator.geolocation) {
@@ -28,9 +26,6 @@ export const useCaptainSocket = () => {
               lng: position.coords.longitude,
             };
 
-            // console.log("📍 Updating captain location:", userLocation);
-
-          
             socket.emit("update-location-captain", {
               userId: rider?._id,
               location: userLocation,
@@ -42,17 +37,16 @@ export const useCaptainSocket = () => {
             );
           },
           (error) => {
-            console.error("❌ Error getting location:", error.message);
+            console.error("Error getting location:", error.message);
           }
         );
       } else {
-        console.warn("⚠️ Geolocation is not supported by this browser.");
+        console.warn("Geolocation is not supported by this browser.");
       }
     };
 
- 
     const locationInterval = setInterval(updateLocation, 10000);
-    updateLocation(); // Call once on mount
+    updateLocation();
 
     socket.on("new-ride", (data) => {
       dispatch(setRide(data));

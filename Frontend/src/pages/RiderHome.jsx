@@ -26,52 +26,58 @@ const RiderHome = () => {
   const { _id } = useSelector((state) => state.captainAuth);
 
   async function confirmRide() {
-    const response = await axios.post(
-      "/api/rides/confirm",
-      {
-        rideId: ride._id,
-        captainId: _id,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
-    );
+    console.log("confirmRide function is called"); // ✅ Check if function runs
 
-    setRidePopupPanel(false);
-    setConfirmRidePopupPanel(true);
+    try {
+      const response = await axios.post(
+        "/api/rides/confirm",
+        { rideId: ride?._id, captainId: _id },
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
+
+      console.log("confirm ride response", response.data); // ✅ Check API response
+
+      setRidePopupPanel(false);
+      setConfirmRidePopupPanel(true);
+    } catch (error) {
+      console.error(
+        "Error confirming ride:",
+        error.response?.data || error.message
+      );
+    }
   }
 
-  useGSAP(
-    function () {
-      if (ridePopupPanel) {
-        gsap.to(ridePopupPanelRef.current, {
-          transform: "translateY(0)",
-        });
-      } else {
-        gsap.to(ridePopupPanelRef.current, {
-          transform: "translateY(100%)",
-        });
-      }
-    },
-    [ridePopupPanel]
-  );
+  // useGSAP(
+  //   function () {
+  //     if (ridePopupPanel) {
+  //       gsap.to(ridePopupPanelRef.current, {
+  //         transform: "translateY(0)",
+  //       });
+  //     } else {
+  //       gsap.to(ridePopupPanelRef.current, {
+  //         transform: "translateY(100%)",
+  //       });
+  //     }
+  //   },
+  //   [ridePopupPanel]
+  // );
 
-  useGSAP(
-    function () {
-      if (confirmRidePopupPanel) {
-        gsap.to(confirmRidePopupPanelRef.current, {
-          transform: "translateY(0)",
-        });
-      } else {
-        gsap.to(confirmRidePopupPanelRef.current, {
-          transform: "translateY(100%)",
-        });
-      }
-    },
-    [confirmRidePopupPanel]
-  );
+  // useGSAP(
+  //   function () {
+  //     if (confirmRidePopupPanel) {
+  //       gsap.to(confirmRidePopupPanelRef.current, {
+  //         transform: "translateY(0)",
+  //       });
+  //     } else {
+  //       gsap.to(confirmRidePopupPanelRef.current, {
+  //         transform: "translateY(100%)",
+  //       });
+  //     }
+  //   },
+  //   [confirmRidePopupPanel]
+  // );
 
   return (
     <div className="h-screen">

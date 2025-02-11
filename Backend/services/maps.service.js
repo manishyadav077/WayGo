@@ -45,9 +45,7 @@ module.exports.getDistanceTime = async (origin, destination) => {
   }
 };
 
-module.exports.getAutoCompleteSuggestions = async (
-  input
-) => {
+module.exports.getAutoCompleteSuggestions = async (input) => {
   if (!input) {
     throw new Error("Query is required");
   }
@@ -56,24 +54,16 @@ module.exports.getAutoCompleteSuggestions = async (
     input
   )}&countrycodes=np&limit=5`;
 
-
   try {
-  
     const response = await axios.get(url);
- 
 
     if (response.data && response.data.length > 0) {
-     
-
       return response.data.map((result) => {
-
         const mappedResult = {
           name: result.display_name,
           lat: parseFloat(result.lat),
           lon: parseFloat(result.lon),
         };
-
-    
 
         return mappedResult;
       });
@@ -85,20 +75,39 @@ module.exports.getAutoCompleteSuggestions = async (
   }
 };
 
-module.exports.getCaptainsInTheRadius = async (lat, lng, radius) => {
-  try {
-   
-    const captains = await captainModel.find({
-      location: {
-        $geoWithin: {
-          $centerSphere: [[lng, lat], radius / 6371],
-        },
-      },
-    });
+// module.exports.getCaptainsInTheRadius = async (lat, lng, radius) => {
+//   try {
+//     // 🔍 Debug: Print all captains before filtering
+//     const allCaptains = await captainModel.find({});
+//     console.log("Total captains in DB:", allCaptains.length);
+//     console.log("All Captains:", allCaptains);
 
+//     // 🌍 Find active captains near pickup location using `$near`
+//     const captains = await captainModel.find({
+//       status: "active", // Only active captains
+//       location: {
+//         $near: {
+//           $geometry: { type: "Point", coordinates: [lng, lat] },
+//           $maxDistance: radius * 1000, // Convert km to meters
+//         },
+//       },
+//     });
+
+//     console.log(`🚖 Found ${captains.length} captains near pickup location.`);
+//     return captains;
+//   } catch (error) {
+//     console.error("❌ Error finding captains in radius:", error);
+//     return [];
+//   }
+// };
+
+module.exports.getAllActiveCaptains = async () => {
+  try {
+    const captains = await captainModel.find({ status: "active" });
+    console.log(`🚖 Found ${captains.length} active captains.`);
     return captains;
   } catch (error) {
-    console.error("Error fetching captains in radius:", error.message);
+    console.error("Error finding captains:", error);
     return [];
   }
 };
