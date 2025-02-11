@@ -55,16 +55,13 @@ module.exports.createRide = async (req, res) => {
 
     activeCaptains.forEach((captain) => {
       if (captain.socketId) {
-        console.log(
-          `🔔 Sending ride request to Captain: ${captain._id} at Socket ${captain.socketId}`
-        );
         sendMessageToSocketId(captain.socketId, {
           event: "new-ride",
           data: rideWithUser,
         });
       } else {
         console.warn(
-          `⚠️ Captain ${captain._id} has no socketId, cannot send notification.`
+          `Captain ${captain._id} has no socketId, cannot send notification.`
         );
       }
     });

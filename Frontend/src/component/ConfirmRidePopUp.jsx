@@ -1,10 +1,11 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const ConfirmRidePopUp = ({
-  setConfirmRidePopUpPanel,
-  setRidePopUpPanel,
+  setConfirmRidePopupPanel,
+  setRidePopupPanel,
   ride,
 }) => {
   const [otp, setOtp] = useState("");
@@ -24,8 +25,8 @@ const ConfirmRidePopUp = ({
     });
 
     if (response.status === 200) {
-      setConfirmRidePopUpPanel(false);
-      setRidePopUpPanel(false);
+      setConfirmRidePopupPanel(false);
+      setRidePopupPanel(false);
       navigate("/captain-riding", { state: { ride: ride } });
     }
   };
@@ -34,7 +35,7 @@ const ConfirmRidePopUp = ({
       <h5
         className="p-1 text-center w-[93%] absolute top-0"
         onClick={() => {
-          setRidePopUpPanel(false);
+          setRidePopupPanel(false);
         }}
       >
         <i className="text-3xl text-gray-200 ri-arrow-down-wide-line"></i>
@@ -95,8 +96,8 @@ const ConfirmRidePopUp = ({
             </button>
             <button
               onClick={() => {
-                setConfirmRidePopUpPanel(false);
-                setRidePopUpPanel(false);
+                setConfirmRidePopupPanel(false);
+                setRidePopupPanel(false);
               }}
               className="w-full mt-2 bg-red-600 text-lg text-white font-semibold p-3 rounded-lg"
             >

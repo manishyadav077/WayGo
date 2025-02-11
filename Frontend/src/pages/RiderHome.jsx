@@ -6,7 +6,6 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import ConfirmRidePopUp from "../component/ConfirmRidePopUp";
 import { setRide } from "../store/rideSlice";
-import { useSocket } from "../hooks/useSocket";
 
 import axios from "axios";
 import { useSelector } from "react-redux";
@@ -22,22 +21,32 @@ const RiderHome = () => {
   useCaptainSocket();
 
   const { ride } = useSelector((state) => state.ride);
+  console.log("ride info", ride);
 
   const { _id } = useSelector((state) => state.captainAuth);
 
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    if (ride) {
+      console.log("New ride received:", ride);
+      setRidePopupPanel(true); // ✅ Open the popup when a new ride comes in
+    }
+  }, [ride]);
+
   async function confirmRide() {
-    console.log("confirmRide function is called"); // ✅ Check if function runs
+    console.log("confirmRide function is called");
 
     try {
       const response = await axios.post(
         "/api/rides/confirm",
         { rideId: ride?._id, captainId: _id },
         {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          headers: { Authorization: token ? `Bearer ${token}` : "" },
         }
       );
 
-      console.log("confirm ride response", response.data); // ✅ Check API response
+      console.log("confirm ride response", response.data);
 
       setRidePopupPanel(false);
       setConfirmRidePopupPanel(true);
@@ -49,35 +58,37 @@ const RiderHome = () => {
     }
   }
 
-  // useGSAP(
-  //   function () {
-  //     if (ridePopupPanel) {
-  //       gsap.to(ridePopupPanelRef.current, {
-  //         transform: "translateY(0)",
-  //       });
-  //     } else {
-  //       gsap.to(ridePopupPanelRef.current, {
-  //         transform: "translateY(100%)",
-  //       });
-  //     }
-  //   },
-  //   [ridePopupPanel]
-  // );
+  useGSAP(
+    function () {
+      if (ridePopupPanel) {
+        gsap.to(ridePopupPanelRef.current, {
+          transform: "translateY(0)",
+          duration: 0.5,
+        });
+      } else {
+        gsap.to(ridePopupPanelRef.current, {
+          transform: "translateY(100%)",
+          duration: 0.5,
+        });
+      }
+    },
+    [ridePopupPanel]
+  );
 
-  // useGSAP(
-  //   function () {
-  //     if (confirmRidePopupPanel) {
-  //       gsap.to(confirmRidePopupPanelRef.current, {
-  //         transform: "translateY(0)",
-  //       });
-  //     } else {
-  //       gsap.to(confirmRidePopupPanelRef.current, {
-  //         transform: "translateY(100%)",
-  //       });
-  //     }
-  //   },
-  //   [confirmRidePopupPanel]
-  // );
+  useGSAP(
+    function () {
+      if (confirmRidePopupPanel) {
+        gsap.to(confirmRidePopupPanelRef.current, {
+          transform: "translateY(0)",
+        });
+      } else {
+        gsap.to(confirmRidePopupPanelRef.current, {
+          transform: "translateY(100%)",
+        });
+      }
+    },
+    [confirmRidePopupPanel]
+  );
 
   return (
     <div className="h-screen">
@@ -106,7 +117,9 @@ const RiderHome = () => {
       </div>
       <div
         ref={ridePopupPanelRef}
-        className="fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 py-10 pt-12"
+        className={`fixed w-full z-10 bottom-0 bg-white px-3 py-10 pt-12 ${
+          ridePopupPanel ? "translate-y-0" : "translate-y-full"
+        }`}
       >
         <RidePopUp
           ride={ride}

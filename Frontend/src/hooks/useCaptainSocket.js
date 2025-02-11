@@ -12,6 +12,8 @@ export const useCaptainSocket = () => {
   useEffect(() => {
     if (!rider) return;
 
+    console.log("Joining socket with:", rider?._id); 
+
     socket.emit("join", {
       userId: rider?._id,
       userType: "captain",
@@ -49,6 +51,7 @@ export const useCaptainSocket = () => {
     updateLocation();
 
     socket.on("new-ride", (data) => {
+      console.log("new ride received in frontend", data)
       dispatch(setRide(data));
     });
 
