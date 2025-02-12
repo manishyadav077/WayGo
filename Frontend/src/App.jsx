@@ -13,12 +13,14 @@ import CaptainLogout from "./pages/CaptainLogout";
 import Riding from "./pages/Riding";
 import RiderHome from "./pages/RiderHome";
 import CaptainRiding from "./pages/CaptainRiding";
+import Loader from "./component/loader";
 
 import "remixicon/fonts/remixicon.css";
 
 const App = () => {
   return (
     <div>
+      <Loader/>
       <Routes>
         <Route path="/" element={<Start />} />
         <Route path="/login" element={<UserLogin />} />

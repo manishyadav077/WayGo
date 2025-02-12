@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setFormField, setUser } from "../store/userAuthSlice";
+import { startLoading, stopLoading } from "../store/loadingSlice";
 import axios from "axios";
 import Input from "../component/Input";
 
@@ -17,6 +18,7 @@ const UserLogin = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    dispatch(startLoading())
 
     const newUser = {
       email: email,
@@ -38,11 +40,12 @@ const UserLogin = () => {
       );
       localStorage.setItem("token", data.token);
       navigate("/home");
+      dispatch(stopLoading())
     }
     // dispatch(resetForm());
   };
 
-  // Word-by-word animation for the title
+
   const titleText = "Revolutionize Your Ride";
   const [displayedTitle, setDisplayedTitle] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -59,11 +62,11 @@ const UserLogin = () => {
 
   return (
     <div className="flex min-h-screen bg-gradient-to-r from-blue-500 to-purple-600">
-      {/* Left Side: Title and Rider Registration Option */}
+     
       <div className="flex-1 flex flex-col justify-center items-start p-12 text-white">
         <h1 className="text-6xl font-bold mb-6">
           {displayedTitle}
-          <span className="animate-pulse">|</span> {/* Cursor effect */}
+          <span className="animate-pulse">|</span>
         </h1>
         <p className="text-xl mb-8">
           Join the future of ride-sharing. Fast, reliable, and eco-friendly.
@@ -76,7 +79,6 @@ const UserLogin = () => {
         </Link>
       </div>
 
-      {/* Right Side: Login Form */}
       <div className="flex-1 flex items-center justify-center p-8">
         <form
           onSubmit={submitHandler}
