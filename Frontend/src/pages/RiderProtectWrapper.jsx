@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { setCaptain } from "../store/captainAuthSlice";
 
-const CaptainProtectWrapper = ({ children }) => {
+const RiderProtectWrapper = ({ children }) => {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -17,7 +17,6 @@ const CaptainProtectWrapper = ({ children }) => {
       return;
     }
 
-    // Fetch captain profile
     axios
       .get("/api/users/profile", {
         headers: {
@@ -44,4 +43,4 @@ const CaptainProtectWrapper = ({ children }) => {
   return <>{children}</>;
 };
 
-export default CaptainProtectWrapper;
+export default RiderProtectWrapper;

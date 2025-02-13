@@ -5,7 +5,7 @@ import { setFormField, setCaptain, resetForm } from "../store/captainAuthSlice";
 import axios from "axios";
 import Input from "../component/Input";
 
-const CaptainSignup = () => {
+const RiderSignup = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -45,24 +45,21 @@ const CaptainSignup = () => {
 
       if (response.status === 201) {
         const data = response.data;
-        // Extract captain data from the response
+
         const { _id, email, fullname, token } = data.captain;
 
-        // Dispatch setCaptain to store captain data in Redux
         dispatch(
           setCaptain({
             email: email,
             firstName: fullname.firstname,
             lastName: fullname.lastname,
-            _id: _id, // Store the _id
-            token: token, // Store the token
+            _id: _id,
+            token: token,
           })
         );
 
-        // Optional: Store token in localStorage for persistence
         localStorage.setItem("token", token);
 
-        // Navigate to the captain home page
         navigate("/captain-home");
       }
     } catch (error) {
@@ -78,7 +75,6 @@ const CaptainSignup = () => {
         <h2 className="text-2xl font-bold text-center mb-4">Captain Signup</h2>
 
         <form onSubmit={submitHandler}>
-          {/* Personal Information */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input
               label="First Name"
@@ -112,7 +108,6 @@ const CaptainSignup = () => {
             />
           </div>
 
-          {/* Vehicle Information */}
           <h3 className="text-lg font-semibold mt-6 mb-3">
             Vehicle Information
           </h3>
@@ -159,13 +154,11 @@ const CaptainSignup = () => {
             />
           </div>
 
-          {/* Submit Button */}
           <button className="mt-6 bg-black text-white font-semibold rounded-lg px-4 py-2 w-full text-lg hover:bg-gray-900 transition">
             Create Captain Account
           </button>
         </form>
 
-        {/* Login Link */}
         <p className="text-center mt-4">
           Already have an account?{" "}
           <Link to="/captain-login" className="text-blue-600 font-medium">
@@ -173,7 +166,6 @@ const CaptainSignup = () => {
           </Link>
         </p>
 
-        {/* Footer */}
         <p className="text-xs text-center mt-6">
           This site is protected by reCAPTCHA and the{" "}
           <span className="underline">Google Privacy Policy</span> and{" "}
@@ -184,4 +176,4 @@ const CaptainSignup = () => {
   );
 };
 
-export default CaptainSignup;
+export default RiderSignup;

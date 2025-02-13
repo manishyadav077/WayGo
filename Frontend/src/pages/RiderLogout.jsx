@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const CaptainLogout = () => {
+const RiderLogout = () => {
   const token = localStorage.getItem("captain-token");
   const navigate = useNavigate();
 
@@ -21,4 +21,4 @@ const CaptainLogout = () => {
   return <div>CaptainLogout</div>;
 };
 
-export default CaptainLogout;
+export default RiderLogout;

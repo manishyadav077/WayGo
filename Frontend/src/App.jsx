@@ -3,16 +3,16 @@ import { Route, Routes } from "react-router-dom";
 import Start from "./pages/Start";
 import UserLogin from "./pages/UserLogin";
 import UserSignup from "./pages/UserSignup";
-import Captainlogin from "./pages/Captainlogin";
-import CaptainSignup from "./pages/CaptainSignup";
+import RiderLogin from "./pages/RiderLogin";
+import RiderSignup from "./pages/RiderSignup";
 import Home from "./pages/Home";
 import UserProtectWrapper from "./pages/UserProtectWrapper";
 import UserLogout from "./pages/UserLogout";
-import CaptainProtectWrapper from "./pages/CaptainProtectWrapper";
-import CaptainLogout from "./pages/CaptainLogout";
+import RiderProtectWrapper from "./pages/RiderProtectWrapper";
+import RiderLogout from "./pages/RiderLogout";
 import Riding from "./pages/Riding";
 import RiderHome from "./pages/RiderHome";
-import CaptainRiding from "./pages/CaptainRiding";
+import RiderRiding from "./pages/RiderRiding";
 import Loader from "./component/loader";
 
 import "remixicon/fonts/remixicon.css";
@@ -25,11 +25,11 @@ const App = () => {
         <Route path="/" element={<Start />} />
         <Route path="/login" element={<UserLogin />} />
         <Route path="/riding" element={<Riding />} />
-        <Route path="/captain-riding" element={<CaptainRiding />} />
+        <Route path="/rider-riding" element={<RiderRiding />} />
 
         <Route path="/signup" element={<UserSignup />} />
-        <Route path="/captain-login" element={<Captainlogin />} />
-        <Route path="/rider-signup" element={<CaptainSignup />} />
+        <Route path="/rider-login" element={<RiderLogin />} />
+        <Route path="/rider-signup" element={<RiderSignup />} />
         <Route
           path="/home"
           element={
@@ -47,19 +47,19 @@ const App = () => {
           }
         />
         <Route
-          path="/captain-home"
+          path="/rider-home"
           element={
-            <CaptainProtectWrapper>
+            <RiderProtectWrapper>
               <RiderHome />
-            </CaptainProtectWrapper>
+            </RiderProtectWrapper>
           }
         />
         <Route
-          path="/captain/logout"
+          path="/rider/logout"
           element={
-            <CaptainProtectWrapper>
-              <CaptainLogout />
-            </CaptainProtectWrapper>
+            <RiderProtectWrapper>
+              <RiderLogout />
+            </RiderProtectWrapper>
           }
         />
       </Routes>

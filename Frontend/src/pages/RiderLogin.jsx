@@ -6,7 +6,7 @@ import { setFormField, resetForm, setCaptain } from "../store/captainAuthSlice";
 import axios from "axios";
 import Input from "../component/Input";
 
-const CaptainLogin = () => {
+const RiderLogin = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -101,4 +101,4 @@ const CaptainLogin = () => {
   );
 };
 
-export default CaptainLogin;
+export default RiderLogin;

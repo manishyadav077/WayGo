@@ -5,7 +5,7 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import LiveTracking from "../component/LiveTracking";
 
-const CaptainRiding = () => {
+const RiderRiding = () => {
   const [finishRidePanel, setFinishRidePanel] = useState(false);
   const finishRidePanelRef = useRef(null);
   const location = useLocation();
@@ -73,4 +73,4 @@ const CaptainRiding = () => {
   );
 };
 
-export default CaptainRiding;
+export default RiderRiding;
