@@ -2,14 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 
 const CaptainDetails = () => {
-  const {
-    firstName,
-    lastName,
-    vehicleColor,
-    vehiclePlate,
-    vehicleCapacity,
-    vehicleType,
-  } = useSelector((state) => state.captainAuth);
+  const { firstName, lastName } = useSelector((state) => state.captainAuth);
   return (
     <div>
       <div className="flex items-center justify-between">

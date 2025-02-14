@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import CaptainDetails from "../component/CaptainDetails";
+import RiderDetails from "../component/RiderDetails";
 import RidePopUp from "../component/RidePopUp";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
@@ -9,7 +9,7 @@ import { setRide } from "../store/rideSlice";
 
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { useCaptainSocket } from "../hooks/useCaptainSocket";
+import { useRiderSocket } from "../hooks/useRiderSocket";
 
 const RiderHome = () => {
   const [ridePopupPanel, setRidePopupPanel] = useState(false);
@@ -18,7 +18,7 @@ const RiderHome = () => {
   const ridePopupPanelRef = useRef(null);
   const confirmRidePopupPanelRef = useRef(null);
 
-  useCaptainSocket();
+  useRiderSocket();
 
   const { ride } = useSelector((state) => state.ride);
   console.log("ride info", ride);
@@ -26,12 +26,11 @@ const RiderHome = () => {
   const { _id } = useSelector((state) => state.captainAuth);
 
   const token = localStorage.getItem("token");
-  console.log(token)
+  console.log(token);
 
   useEffect(() => {
     if (ride) {
-      console.log("New ride received:", ride);
-      setRidePopupPanel(true); // ✅ Open the popup when a new ride comes in
+      setRidePopupPanel(true);
     }
   }, [ride]);
 
@@ -114,7 +113,7 @@ const RiderHome = () => {
         />
       </div>
       <div className="h-2/5 p-6">
-        <CaptainDetails />
+        <RiderDetails />
       </div>
       <div
         ref={ridePopupPanelRef}

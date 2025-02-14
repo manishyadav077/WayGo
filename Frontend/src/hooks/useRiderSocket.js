@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { getSocket } from "../services/socketService";
 import { setRide } from "../store/rideSlice";
 
-export const useCaptainSocket = () => {
+export const useRiderSocket = () => {
   const dispatch = useDispatch();
   const rider = useSelector((state) => state.captainAuth);
 
@@ -11,8 +11,6 @@ export const useCaptainSocket = () => {
 
   useEffect(() => {
     if (!rider) return;
-
-    console.log("Joining socket with:", rider?._id); 
 
     socket.emit("join", {
       userId: rider?._id,
@@ -51,7 +49,7 @@ export const useCaptainSocket = () => {
     updateLocation();
 
     socket.on("new-ride", (data) => {
-      console.log("new ride received in frontend", data)
+      console.log("new ride received in frontend", data);
       dispatch(setRide(data));
     });
 

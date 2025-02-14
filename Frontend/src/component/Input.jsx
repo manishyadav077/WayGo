@@ -9,10 +9,15 @@ const Input = ({
   required = false,
   options = [],
   className = "",
+  labelClassName = "",
 }) => {
   return (
     <div className="flex flex-col w-full">
-      {label && <label className="text-lg font-medium mb-1">{label}</label>}
+      {label && (
+        <label className={`text-lg font-medium mb-1 ${labelClassName}`}>
+          {label}
+        </label>
+      )}
 
       {type === "select" ? (
         <select

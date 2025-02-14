@@ -32,7 +32,7 @@ const RiderProtectWrapper = ({ children }) => {
       .catch((err) => {
         console.log("Error fetching user:", err);
         localStorage.removeItem("token");
-        navigate("/captain-home");
+        navigate("/rider-home");
       });
   }, [token]);
 

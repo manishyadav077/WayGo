@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setFormField, setCaptain, resetForm } from "../store/captainAuthSlice";
@@ -69,18 +69,52 @@ const RiderSignup = () => {
     }
   };
 
+  const titleText = "Revolutionize Your Ride";
+  const [displayedTitle, setDisplayedTitle] = useState("");
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    if (currentIndex < titleText.length) {
+      const timeout = setTimeout(() => {
+        setDisplayedTitle((prev) => prev + titleText[currentIndex]);
+        setCurrentIndex((prev) => prev + 1);
+      }, 100);
+      return () => clearTimeout(timeout);
+    }
+  }, [currentIndex]);
+
   return (
-    <div className="min-h-screen flex justify-center items-center bg-gradient-to-r from-blue-500 to-purple-600 p-6">
-      <div className="w-full max-w-2xl bg-white shadow-lg rounded-xl p-6">
-        <h2 className="text-2xl font-bold text-center mb-4">Captain Signup</h2>
+    <div className="min-h-screen flex bg-[rgb(16,23,42)] p-6">
+      <div className="flex-1 flex flex-col justify-center items-start p-12 text-white">
+        <h1 className="text-6xl font-bold mb-6">
+          {displayedTitle}
+          <span className="animate-pulse">|</span>
+        </h1>
+        <p className="text-xl mb-8">
+          Join the future of ride-sharing. Fast, reliable, and eco-friendly.
+        </p>
+        <Link
+          to="/signup"
+          className="bg-white text-blue-600 py-3 px-6 rounded-full text-lg font-semibold hover:bg-gray-100 transition-all duration-300"
+        >
+          Register as a User
+        </Link>
+      </div>
+      <div className="border-r-2 border-white h-auto mr-1.5"></div>
+
+      <div className="p-6 bg-white rounded-xl">
+        <h2 className="text-2xl font-bold text-center mb-4 text-blue-950">
+          Rider Signup
+        </h2>
 
         <form onSubmit={submitHandler}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <Input
               label="First Name"
               placeholder="First name"
               value={firstName}
               onChange={(e) => handleInputChange("firstName", e.target.value)}
+              labelClassName="text-[15px]"
               required
             />
             <Input
@@ -88,6 +122,7 @@ const RiderSignup = () => {
               placeholder="Last name"
               value={lastName}
               onChange={(e) => handleInputChange("lastName", e.target.value)}
+              labelClassName="text-[15px]"
               required
             />
             <Input
@@ -96,6 +131,7 @@ const RiderSignup = () => {
               placeholder="email@example.com"
               value={email}
               onChange={(e) => handleInputChange("email", e.target.value)}
+              labelClassName="text-[15px]"
               required
             />
             <Input
@@ -104,14 +140,12 @@ const RiderSignup = () => {
               placeholder="Enter password"
               value={password}
               onChange={(e) => handleInputChange("password", e.target.value)}
+              labelClassName="text-[15px]"
               required
             />
           </div>
 
-          <h3 className="text-lg font-semibold mt-6 mb-3">
-            Vehicle Information
-          </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
             <Input
               label="Vehicle Color"
               placeholder="Vehicle Color"
@@ -119,6 +153,7 @@ const RiderSignup = () => {
               onChange={(e) =>
                 handleInputChange("vehicleColor", e.target.value)
               }
+              labelClassName="text-[15px]"
               required
             />
             <Input
@@ -128,6 +163,7 @@ const RiderSignup = () => {
               onChange={(e) =>
                 handleInputChange("vehiclePlate", e.target.value)
               }
+              labelClassName="text-[15px]"
               required
             />
             <Input
@@ -138,6 +174,7 @@ const RiderSignup = () => {
               onChange={(e) =>
                 handleInputChange("vehicleCapacity", e.target.value)
               }
+              labelClassName="text-[15px]"
               required
             />
             <Input
@@ -145,6 +182,7 @@ const RiderSignup = () => {
               type="select"
               value={vehicleType}
               onChange={(e) => handleInputChange("vehicleType", e.target.value)}
+              labelClassName="text-[15px]"
               required
               options={[
                 { value: "car", label: "Car" },
@@ -154,19 +192,21 @@ const RiderSignup = () => {
             />
           </div>
 
-          <button className="mt-6 bg-black text-white font-semibold rounded-lg px-4 py-2 w-full text-lg hover:bg-gray-900 transition">
-            Create Captain Account
-          </button>
+          <div className="flex justify-center">
+            <button className="mt-6  bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg px-6 py-2 text-lghover:from-blue-700 hover:to-purple-700 transition-all duration-300 cursor-pointer">
+              Create Rider Account
+            </button>
+          </div>
         </form>
 
-        <p className="text-center mt-4">
+        <p className="text-center mt-3">
           Already have an account?{" "}
-          <Link to="/captain-login" className="text-blue-600 font-medium">
+          <Link to="/rider-login" className="text-blue-500 font-medium">
             Login here
           </Link>
         </p>
 
-        <p className="text-xs text-center mt-6">
+        <p className="text-xs text-center mt-4">
           This site is protected by reCAPTCHA and the{" "}
           <span className="underline">Google Privacy Policy</span> and{" "}
           <span className="underline">Terms of Service apply</span>.

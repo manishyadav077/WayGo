@@ -18,7 +18,7 @@ const UserLogin = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    dispatch(startLoading())
+    dispatch(startLoading());
 
     const newUser = {
       email: email,
@@ -40,11 +40,10 @@ const UserLogin = () => {
       );
       localStorage.setItem("token", data.token);
       navigate("/home");
-      dispatch(stopLoading())
+      dispatch(stopLoading());
     }
     // dispatch(resetForm());
   };
-
 
   const titleText = "Revolutionize Your Ride";
   const [displayedTitle, setDisplayedTitle] = useState("");
@@ -55,14 +54,13 @@ const UserLogin = () => {
       const timeout = setTimeout(() => {
         setDisplayedTitle((prev) => prev + titleText[currentIndex]);
         setCurrentIndex((prev) => prev + 1);
-      }, 100); // Adjust speed of animation (100ms per character)
+      }, 100);
       return () => clearTimeout(timeout);
     }
   }, [currentIndex]);
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-r from-blue-500 to-purple-600">
-     
+    <div className="flex min-h-screen bg-[rgb(16,23,42)]">
       <div className="flex-1 flex flex-col justify-center items-start p-12 text-white">
         <h1 className="text-6xl font-bold mb-6">
           {displayedTitle}
@@ -78,7 +76,7 @@ const UserLogin = () => {
           Register as a Rider
         </Link>
       </div>
-
+      <div className="border-r-2 border-white h-ato mr-1.5 my-5"></div>
       <div className="flex-1 flex items-center justify-center p-8">
         <form
           onSubmit={submitHandler}
@@ -87,14 +85,14 @@ const UserLogin = () => {
           <h3 className="text-3xl font-bold mb-6 text-center text-gray-800">
             Welcome Back!
           </h3>
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-4">
             <Input
               label="Email"
               placeholder="Enter your email"
               value={email}
               onChange={(e) => handleInputChange("email", e.target.value)}
+              labelClassName="text-[15px]"
               required
-              className="w-full"
             />
 
             <Input
@@ -103,8 +101,8 @@ const UserLogin = () => {
               type="password"
               value={password}
               onChange={(e) => handleInputChange("password", e.target.value)}
+              labelClassName="text-[15px]"
               required
-              className="w-full"
             />
           </div>
           <button
