@@ -7,7 +7,7 @@ const SocketProvider = ({ children }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const socket = connectSocket(); // Get the singleton socket instance
+    const socket = connectSocket();
 
     socket.on("connect", () => {
       console.log("Connected to server");

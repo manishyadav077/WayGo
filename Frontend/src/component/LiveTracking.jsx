@@ -34,7 +34,6 @@ const LiveTracking = () => {
     };
   }, []);
 
-  // Update position on geolocation change
   useEffect(() => {
     const updatePosition = (position) => {
       const { latitude, longitude } = position.coords;
@@ -52,7 +51,9 @@ const LiveTracking = () => {
     return () => navigator.geolocation.clearWatch(watchId);
   }, [map, marker]);
 
-  return <div id="map" style={{ width: "100%", height: "100vh", zIndex: 10 }} />;
+  return (
+    <div id="map" style={{ width: "100%", height: "100vh", zIndex: 10 }} />
+  );
 };
 
 export default LiveTracking;

@@ -2,22 +2,20 @@ import React from "react";
 
 const LocationSearchPanel = ({
   suggestions,
-  setVehiclePanel,
-  setPanelOpen,
   setPickup,
   setDestination,
   activeField,
 }) => {
-  const handleSuggestionClick = (suggestion) => {
+  const handleSuggestionClick = (suggestions) => {
     if (activeField === "pickup") {
-      setPickup(suggestion);
+      setPickup(suggestions);
     } else if (activeField === "destination") {
-      setDestination(suggestion);
+      setDestination(suggestions);
     }
   };
+
   return (
     <div>
-      {/* Display fetched suggestions */}
       {suggestions.map((elem, idx) => (
         <div
           key={idx}
@@ -27,8 +25,7 @@ const LocationSearchPanel = ({
           <h2 className="bg-[#eee] h-8 flex items-center justify-center w-12 rounded-full">
             <i className="ri-map-pin-fill"></i>
           </h2>
-          <h4 className="font-medium">{elem.name}</h4>{" "}
-          {/* ✅ Render only name */}
+          <h4 className="font-medium cursor-pointer">{elem.name}</h4>{" "}
         </div>
       ))}
     </div>

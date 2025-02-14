@@ -14,3 +14,14 @@ export const usePanelAnimations = (ref, isOpen) => {
     }
   }, [isOpen]);
 };
+
+export const panelRefFunction=(panelRef, panelOpen)=>useGSAP(()=>{
+  if(panelOpen){
+gsap.to(panelRef.current, {
+  height: '70%'
+})}else{
+  gsap.to(panelRef.current,{
+    height: '0%'
+  })
+}
+},[panelOpen])

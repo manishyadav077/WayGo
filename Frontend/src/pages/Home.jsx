@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useSocket } from "../hooks/useSocket";
-import { usePanelAnimations } from "../hooks/usePanelAnimations";
+import { panelRefFunction, usePanelAnimations } from "../hooks/usePanelAnimations";
 import { useInputHandlers } from "../hooks/useInputHandler";
 import { fetchFare, createRide } from "../services/rideService";
 import {
@@ -39,12 +39,11 @@ const Home = () => {
     pickupSuggestions,
     destinationSuggestions,
     activeField,
+    panelOpen
   } = useSelector((state) => state.ride);
 
   const userId = useSelector((state) => state.userAuth);
-  // console.log("user id while creating ride", userId)
 
-  // Refs for GSAP animations
   const vehiclePanelRef = useRef(null);
   const confirmRidePanelRef = useRef(null);
   const vehicleFoundRef = useRef(null);
@@ -52,12 +51,13 @@ const Home = () => {
   const panelRef = useRef(null);
   const panelCloseRef = useRef(null);
 
-  // Custom hooks
   useSocket();
   usePanelAnimations(vehiclePanelRef, vehiclePanel);
   usePanelAnimations(confirmRidePanelRef, confirmRidePanel);
   usePanelAnimations(vehicleFoundRef, vehicleFound);
   usePanelAnimations(waitingForDriverRef, waitingForDriver);
+  panelRefFunction(panelRef, panelOpen
+  )
   const { handlePickupChange, handleDestinationChange } = useInputHandlers();
 
   navigator.geolocation.getCurrentPosition(
@@ -67,7 +67,6 @@ const Home = () => {
         lng: position.coords.longitude,
       };
 
-      // ✅ Store in localStorage for future requests
       localStorage.setItem("userLocation", JSON.stringify(userLocation));
     },
     (error) => {
@@ -75,14 +74,13 @@ const Home = () => {
     }
   );
 
-  // Find trip and calculate fare
   const findTrip = async () => {
     dispatch(setVehiclePanel(true));
     dispatch(setPanelOpen(false));
     try {
       const fare = await fetchFare(
-        pickup,
-        destination,
+        pickup.name,
+        destination.name,
         localStorage.getItem("token")
       );
       dispatch(setFare(fare));
@@ -91,7 +89,6 @@ const Home = () => {
     }
   };
 
-  // Create a ride
   const handleCreateRide = async () => {
     try {
       await createRide(
@@ -133,7 +130,7 @@ const Home = () => {
                 dispatch(setPanelOpen(true));
                 dispatch(setActiveField("pickup"));
               }}
-              value={pickup}
+              value={pickup.name}
               onChange={handlePickupChange}
               className="bg-[#eee] px-12 py-2 text-lg rounded-lg w-full z-30"
               type="text"
@@ -144,7 +141,7 @@ const Home = () => {
                 dispatch(setPanelOpen(true));
                 dispatch(setActiveField("destination"));
               }}
-              value={destination}
+              value={destination.name}
               onChange={handleDestinationChange}
               className="bg-[#eee] px-12 py-2 text-lg rounded-lg w-full mt-1 z-30"
               type="text"
