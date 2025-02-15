@@ -13,6 +13,7 @@ const RiderRiding = () => {
   const rideData = location.state?.ride;
 
   const { ride } = useSelector((state) => state.ride);
+  console.log(ride)
 
   useGSAP(
     function () {
@@ -70,7 +71,10 @@ const RiderRiding = () => {
       </div>
 
       <div className="h-screen fixed w-screen top-0 z-[-1]">
-        <LiveTrackingDestination />
+        <LiveTrackingDestination
+          pickup={ride?.pickup}
+          destination={ride?.destination}
+        />
       </div>
     </div>
   );

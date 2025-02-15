@@ -16,6 +16,7 @@ import RiderRiding from "./pages/RiderRiding";
 import Loader from "./component/loader";
 
 import "remixicon/fonts/remixicon.css";
+import RiderDetails from "./component/RiderDetails";
 
 const App = () => {
   return (
@@ -30,6 +31,7 @@ const App = () => {
         <Route path="/signup" element={<UserSignup />} />
         <Route path="/rider-login" element={<RiderLogin />} />
         <Route path="/rider-signup" element={<RiderSignup />} />
+        <Route path="/rider-profile" element={<RiderDetails />} />
         <Route
           path="/home"
           element={

@@ -1,23 +1,33 @@
 import React, { useState, useEffect } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import "leaflet-routing-machine";
-import { useSelector } from "react-redux";
-import axios from "axios";
 
 const LiveTrackingDestination = () => {
-  const { ride } = useSelector((state) => state.ride);
+  const [currentPosition, setCurrentPosition] = useState({
+    lat: -3.745,
+    lng: -38.523,
+  });
   const [map, setMap] = useState(null);
-  const [routingControl, setRoutingControl] = useState(null);
+  const [marker, setMarker] = useState(null);
 
+  // Initialize the map
   useEffect(() => {
-    const mapInstance = L.map("map").setView([20, 78], 5); // Default view
+    const mapInstance = L.map("map").setView(
+      [currentPosition.lat, currentPosition.lng],
+      15
+    );
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: '&copy; OpenStreetMap contributors',
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(mapInstance);
 
+    const markerInstance = L.marker([
+      currentPosition.lat,
+      currentPosition.lng,
+    ]).addTo(mapInstance);
     setMap(mapInstance);
+    setMarker(markerInstance);
 
     return () => {
       mapInstance.remove();
@@ -25,41 +35,25 @@ const LiveTrackingDestination = () => {
   }, []);
 
   useEffect(() => {
-    if (map && ride?.pickup && ride?.destination) {
-      getCoordinates(ride.pickup, ride.destination)
-        .then(([pickupCoords, destinationCoords]) => {
-          if (routingControl) {
-            map.removeControl(routingControl);
-          }
+    const updatePosition = (position) => {
+      const { latitude, longitude } = position.coords;
+      const newPosition = { lat: latitude, lng: longitude };
+      setCurrentPosition(newPosition);
 
-          const newRoutingControl = L.Routing.control({
-            waypoints: [
-              L.latLng(pickupCoords.lat, pickupCoords.lon),
-              L.latLng(destinationCoords.lat, destinationCoords.lon),
-            ],
-            routeWhileDragging: true,
-          }).addTo(map);
+      if (map && marker) {
+        map.setView([latitude, longitude], 15);
+        marker.setLatLng([latitude, longitude]);
+      }
+    };
 
-          setRoutingControl(newRoutingControl);
-        })
-        .catch((error) => console.error("Error fetching coordinates:", error));
-    }
-  }, [map, ride]);
+    const watchId = navigator.geolocation.watchPosition(updatePosition);
 
-  return <div id="map" style={{ width: "100%", height: "100vh", zIndex: 10 }} />;
+    return () => navigator.geolocation.clearWatch(watchId);
+  }, [map, marker]);
+
+  return (
+    <div id="map" style={{ width: "100%", height: "100vh", zIndex: 10 }} />
+  );
 };
-
-// Function to get latitude & longitude using Nominatim API
-async function getCoordinates(pickup, destination) {
-  const fetchCoords = async (place) => {
-    const res = await axios.get(`https://nominatim.openstreetmap.org/search`, {
-      params: { q: place, format: "json", limit: 1 },
-    });
-    if (res.data.length === 0) throw new Error(`Location not found: ${place}`);
-    return res.data[0];
-  };
-
-  return Promise.all([fetchCoords(pickup), fetchCoords(destination)]);
-}
 
 export default LiveTrackingDestination;
