@@ -16,25 +16,33 @@ export const useSocket = () => {
 
   // Join user to socket room
   useEffect(() => {
-    socket?.emit("join", { userType: "user", userId: user._id });
+    if (socket && user?._id) {
+      socket.emit("join", { userType: "user", userId: user._id });
+    }
   }, [user, socket]);
 
   // Socket event listeners
   useEffect(() => {
-    socket.on("ride-confirmed", (ride) => {
-      dispatch(setVehicleFound(false));
-      dispatch(setWaitingForDriver(true));
-      dispatch(setRide(ride));
-    });
+    if (socket) {
+      socket.on("ride-confirmed", (ride) => {
+        dispatch(setVehicleFound(false));
+        dispatch(setWaitingForDriver(true));
+        dispatch(setRide(ride));
+      });
 
-    socket.on("ride-started", (ride) => {
-      dispatch(setWaitingForDriver(false));
-      navigate("/riding", { state: { ride } });
-    });
+      socket.on("ride-started", (ride) => {
+        dispatch(setWaitingForDriver(false));
+        navigate("/riding", { state: { ride } });
+      });
+    }
 
     return () => {
-      socket.off("ride-confirmed");
-      socket.off("ride-started");
+      if (socket) {
+        socket.off("ride-confirmed");
+        socket.off("ride-started");
+      }
     };
   }, [socket, dispatch, navigate]);
+
+  return socket;
 };

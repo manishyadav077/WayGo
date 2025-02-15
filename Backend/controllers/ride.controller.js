@@ -47,8 +47,6 @@ module.exports.createRide = async (req, res) => {
       return;
     }
 
-    ride.otp = "";
-
     const rideWithUser = await rideModel
       .findOne({ _id: ride._id })
       .populate("user");
@@ -119,12 +117,12 @@ module.exports.startRide = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { rideId, otp } = req.query;
+  const { rideId } = req.query;
 
   try {
     const ride = await rideService.startRide({
       rideId,
-      otp,
+
       captain: req.captain,
     });
 

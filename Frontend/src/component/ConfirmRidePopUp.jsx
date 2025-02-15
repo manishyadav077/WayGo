@@ -1,6 +1,5 @@
 import axios from "axios";
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 
 const ConfirmRidePopUp = ({
@@ -8,7 +7,6 @@ const ConfirmRidePopUp = ({
   setRidePopupPanel,
   ride,
 }) => {
-  const [otp, setOtp] = useState("");
   const navigate = useNavigate();
 
   const submitHandler = async (e) => {
@@ -17,7 +15,6 @@ const ConfirmRidePopUp = ({
     const response = await axios.get("/api/rides/start-ride", {
       params: {
         rideId: ride._id,
-        otp: otp,
       },
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -30,6 +27,7 @@ const ConfirmRidePopUp = ({
       navigate("/rider-riding", { state: { ride: ride } });
     }
   };
+
   return (
     <div>
       <h5
@@ -83,14 +81,6 @@ const ConfirmRidePopUp = ({
 
         <div className="mt-6 w-full">
           <form onSubmit={submitHandler}>
-            <input
-              value={otp}
-              onChange={(e) => setOtp(e.target.value)}
-              type="text"
-              className="bg-[#eee] px-6 py-4 font-mono text-lg rounded-lg w-full mt-3"
-              placeholder="Enter OTP"
-            />
-
             <button className="w-full mt-5 text-lg flex justify-center bg-green-600 text-white font-semibold p-3 rounded-lg">
               Confirm
             </button>

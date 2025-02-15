@@ -1,15 +1,18 @@
 import React, { useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import FinishRide from "../component/FinishRide"
+import FinishRide from "../component/FinishRide";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import LiveTracking from "../component/LiveTracking";
+import LiveTrackingDestination from "../component/LiveTrackingDestination";
+import { useSelector } from "react-redux";
 
 const RiderRiding = () => {
   const [finishRidePanel, setFinishRidePanel] = useState(false);
   const finishRidePanelRef = useRef(null);
   const location = useLocation();
   const rideData = location.state?.ride;
+
+  const { ride } = useSelector((state) => state.ride);
 
   useGSAP(
     function () {
@@ -67,7 +70,7 @@ const RiderRiding = () => {
       </div>
 
       <div className="h-screen fixed w-screen top-0 z-[-1]">
-        <LiveTracking />
+        <LiveTrackingDestination />
       </div>
     </div>
   );

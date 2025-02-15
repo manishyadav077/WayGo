@@ -22,11 +22,9 @@ const RiderHome = () => {
 
   const { ride } = useSelector((state) => state.ride);
 
-
   const { _id } = useSelector((state) => state.captainAuth);
 
   const token = localStorage.getItem("token");
-  console.log(token);
 
   useEffect(() => {
     if (ride) {

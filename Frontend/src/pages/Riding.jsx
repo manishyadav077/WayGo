@@ -1,21 +1,26 @@
-import React from "react";
-import { Link, useLocation } from "react-router-dom"; // Added useLocation
+import React, { useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import LiveTracking from "../component/LiveTracking";
 import { useSocket } from "../hooks/useSocket";
 
 const Riding = () => {
   const location = useLocation();
-  const { ride } = location.state || {}; 
-
+  const { ride } = location.state || {};
   const navigate = useNavigate();
+  const socket = useSocket();
 
-  const socket = useSocket()
-  console.log(socket)
+  useEffect(() => {
+    if (socket) {
+      socket.on("ride-ended", () => {
+        navigate("/home");
+      });
 
-  socket?.on("ride-ended", () => {
-    navigate("/home");
-  });
+      return () => {
+        socket.off("ride-ended");
+      };
+    }
+  }, [socket, navigate]);
 
   return (
     <div className="h-screen">
