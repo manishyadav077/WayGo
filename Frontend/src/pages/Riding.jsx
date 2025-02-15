@@ -2,14 +2,18 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom"; // Added useLocation
 import { useNavigate } from "react-router-dom";
 import LiveTracking from "../component/LiveTracking";
+import { useSocket } from "../hooks/useSocket";
 
 const Riding = () => {
   const location = useLocation();
-  const { ride } = location.state || {}; //
+  const { ride } = location.state || {}; 
 
   const navigate = useNavigate();
 
-  socket.on("ride-ended", () => {
+  const socket = useSocket()
+  console.log(socket)
+
+  socket?.on("ride-ended", () => {
     navigate("/home");
   });
 

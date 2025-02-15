@@ -27,7 +27,7 @@ const ConfirmRidePopUp = ({
     if (response.status === 200) {
       setConfirmRidePopupPanel(false);
       setRidePopupPanel(false);
-      navigate("/captain-riding", { state: { ride: ride } });
+      navigate("/rider-riding", { state: { ride: ride } });
     }
   };
   return (

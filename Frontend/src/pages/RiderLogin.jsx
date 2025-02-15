@@ -40,7 +40,7 @@ const RiderLogin = () => {
       );
       localStorage.setItem("token", data.token);
       // dispatch(resetForm());
-      navigate("/captain-home");
+      navigate("/rider-home");
     }
   };
 

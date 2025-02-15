@@ -1,7 +1,10 @@
 import React, { useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useSocket } from "../hooks/useSocket";
-import { panelRefFunction, usePanelAnimations } from "../hooks/usePanelAnimations";
+import {
+  panelRefFunction,
+  usePanelAnimations,
+} from "../hooks/usePanelAnimations";
 import { useInputHandlers } from "../hooks/useInputHandler";
 import { fetchFare, createRide } from "../services/rideService";
 import {
@@ -23,6 +26,7 @@ import ConfirmRide from "../component/ConfirmRide";
 import LookingForDriver from "../component/LookingForDriver";
 import WaitingForDriver from "../component/WaitingForDriver";
 import LiveTracking from "../component/LiveTracking";
+import { startLoading, stopLoading } from "../store/loadingSlice";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -39,7 +43,7 @@ const Home = () => {
     pickupSuggestions,
     destinationSuggestions,
     activeField,
-    panelOpen
+    panelOpen,
   } = useSelector((state) => state.ride);
 
   const userId = useSelector((state) => state.userAuth);
@@ -56,8 +60,7 @@ const Home = () => {
   usePanelAnimations(confirmRidePanelRef, confirmRidePanel);
   usePanelAnimations(vehicleFoundRef, vehicleFound);
   usePanelAnimations(waitingForDriverRef, waitingForDriver);
-  panelRefFunction(panelRef, panelOpen
-  )
+  panelRefFunction(panelRef, panelOpen);
   const { handlePickupChange, handleDestinationChange } = useInputHandlers();
 
   navigator.geolocation.getCurrentPosition(
@@ -77,6 +80,7 @@ const Home = () => {
   const findTrip = async () => {
     dispatch(setVehiclePanel(true));
     dispatch(setPanelOpen(false));
+    dispatch(startLoading());
     try {
       const fare = await fetchFare(
         pickup.name,
@@ -84,6 +88,7 @@ const Home = () => {
         localStorage.getItem("token")
       );
       dispatch(setFare(fare));
+      dispatch(stopLoading());
     } catch (error) {
       console.error("Error fetching fare:", error);
     }
@@ -92,8 +97,8 @@ const Home = () => {
   const handleCreateRide = async () => {
     try {
       await createRide(
-        pickup,
-        destination,
+        pickup.name,
+        destination.name,
         vehicleType,
         localStorage.getItem("token"),
         userId._id
@@ -115,13 +120,15 @@ const Home = () => {
       </div>
       <div className="flex flex-col justify-end h-screen absolute top-0 w-full z-20">
         <div className="h-[40%] p-6 bg-white relative">
-          <h5
-            ref={panelCloseRef}
-            onClick={() => dispatch(setPanelOpen(false))}
-            className="absolute opacity-0 right-6 top-2 text-2xl"
-          >
-            <i className="ri-arrow-down-wide-line"></i>
-          </h5>
+          {panelOpen && (
+            <h5
+              ref={panelCloseRef}
+              onClick={() => dispatch(setPanelOpen(false))}
+              className="p-1 text-center w-[93%] absolute top-0"
+            >
+              <i className="text-3xl text-black ri-arrow-down-wide-line cursor-pointer"></i>
+            </h5>
+          )}
           <h4 className="text-2xl font-semibold">Find a trip</h4>
           <form className="relative py-1" onSubmit={(e) => e.preventDefault()}>
             <div className="line absolute h-16 w-1 top-[50%] -translate-y-1/2 left-5 bg-gray-700 rounded-full"></div>

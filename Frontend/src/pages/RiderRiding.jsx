@@ -35,7 +35,7 @@ const RiderRiding = () => {
           alt=""
         />
         <Link
-          to="/captain-home"
+          to="/rider-home"
           className=" h-10 w-10 bg-white flex items-center justify-center rounded-full"
         >
           <i className="text-lg font-medium ri-logout-box-r-line"></i>
